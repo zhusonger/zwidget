@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:name="cn.com.lasong.base.BaseApplication"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity" >
             <intent-filter>
@@ -16,5 +17,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".lyric.LyricActivity" />
     </application>
 </manifest>
