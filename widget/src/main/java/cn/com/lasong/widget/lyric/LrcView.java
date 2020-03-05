@@ -241,7 +241,7 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
             // 查询当前时长播放到哪一行的歌词
             for (int i = 0; i < lineSize; i++) {
                 LyricLine line = lines.get(i);
-                long start = line.start - offset;
+                long start = line.start + offset;
                 long end = start + line.duration;
                 // 当前正在播放行
                 if (passMs >= start) {
@@ -271,7 +271,7 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
             }
             // 计算歌词播放百分比
             float percent;
-            long linePassMs = passMs - (curLrc.start - offset);
+            long linePassMs = passMs - (curLrc.start + offset);
             // 不在歌词播放时长范围
             if (linePassMs < 0 || linePassMs > curLrc.duration) {
                 linePassMs = linePassMs < 0 ? 0 : curLrc.duration;

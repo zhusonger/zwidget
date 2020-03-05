@@ -2,6 +2,7 @@ package cn.com.lasong.lyric;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioTimestamp;
 import android.media.AudioTrack;
 import android.media.MediaFormat;
 
@@ -19,14 +20,19 @@ import cn.com.lasong.widget.lyric.ITimeProvider;
 public class MP3Player implements ITimeProvider, IMP3DecodeCallback{
 
     private final int PERIOD_FACTOR = 20;
+    // 间隔时间
     private final int INTERVAL = 1000 / PERIOD_FACTOR;
+    // 采样率
+    private int mSampleRate;
 
     @Override
     public long getCurrentPosition() {
-        if (null == mAudioTrack) {
+        if (null == mAudioTrack || mSampleRate <= 0) {
             return 0;
         }
-        return 0;
+        int numFramesPlayed = mAudioTrack.getPlaybackHeadPosition();
+        long audioTimeMs = (numFramesPlayed * 1000L) / mSampleRate;
+        return audioTimeMs;
     }
 
     @Override
@@ -44,24 +50,12 @@ public class MP3Player implements ITimeProvider, IMP3DecodeCallback{
         int sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
         int channelCount = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
         int audioFormat = channelCount > 1 ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO;
+        mSampleRate = sampleRate;
         // 获取最小buffer大小
         int bufferSize = AudioTrack.getMinBufferSize(sampleRate,
                 audioFormat, AudioFormat.ENCODING_PCM_16BIT);
         mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate, audioFormat,
                 AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
-        // sampleRate是一秒的采样率, 我们周期根据需要调整除数, 1000/20 就是50ms一次回调
-        mAudioTrack.setPositionNotificationPeriod(sampleRate / PERIOD_FACTOR);
-        mAudioTrack.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
-            @Override
-            public void onMarkerReached(AudioTrack track) {
-                ILog.d("onMarkerReached:" + track.getNotificationMarkerPosition()+", "+track.getPlaybackHeadPosition());
-            }
-
-            @Override
-            public void onPeriodicNotification(AudioTrack track) {
-                ILog.d("onPeriodicNotification:" + track.getNotificationMarkerPosition()+", "+track.getPlaybackHeadPosition());
-            }
-        });
         mAudioTrack.play();
     }
 
