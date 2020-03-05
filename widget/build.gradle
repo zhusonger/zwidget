@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -21,6 +23,9 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -31,4 +36,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(":base")
+}
+
+publish {
+    userOrg = 'zhusong'
+    groupId = 'cn.com.lasong'
+    artifactId = 'widget'
+    publishVersion = '0.0.1'
+    desc = 'AndroidZ Widget'
+    website = "https://github.com/zhusonger/androidz.git"
 }
