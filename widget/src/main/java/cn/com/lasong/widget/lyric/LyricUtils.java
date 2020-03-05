@@ -1,9 +1,11 @@
 package cn.com.lasong.widget.lyric;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,9 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.Inflater;
 
-import cn.com.lasong.utils.ILog;
-import cn.com.lasong.utils.ZLibUtils;
 
 /**
  * Author: zhusong
@@ -44,6 +45,34 @@ public class LyricUtils {
             return null;
         }
     }
+
+    public static byte[] decompress(byte[] data) {
+        byte[] output;
+        Inflater decompresser = new Inflater();
+        decompresser.reset();
+        decompresser.setInput(data);
+        ByteArrayOutputStream o = new ByteArrayOutputStream(data.length);
+        try {
+            byte[] buf = new byte[1024];
+            while (!decompresser.finished()) {
+                int i = decompresser.inflate(buf);
+                o.write(buf, 0, i);
+            }
+            output = o.toByteArray();
+        } catch (Exception e) {
+            output = data;
+            e.printStackTrace();
+        } finally {
+            try {
+                o.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        decompresser.end();
+        return output;
+    }
+
     public static byte[] parseLyricFileToByte(InputStream in) {
         try{
             byte[] zipBytes = new byte[(int)in.available()];
@@ -59,7 +88,30 @@ public class LyricUtils {
                 tmp67_64[tmp67_65] = (byte) (tmp67_64[tmp67_65] ^ MI_ARRAY[j]);
             }
             //解压缩。krc格式文件除了加密之外，还使用了ZLIB压缩库中的 DEFLATE压缩算法 进行压缩。
-            return ZLibUtils.decompress(zipBytes);
+            byte[] output;
+            Inflater decompresser = new Inflater();
+            decompresser.reset();
+            decompresser.setInput(zipBytes);
+            ByteArrayOutputStream o = new ByteArrayOutputStream(zipBytes.length);
+            try {
+                byte[] buf = new byte[1024];
+                while (!decompresser.finished()) {
+                    int i = decompresser.inflate(buf);
+                    o.write(buf, 0, i);
+                }
+                output = o.toByteArray();
+            } catch (Exception e) {
+                output = zipBytes;
+                e.printStackTrace();
+            } finally {
+                try {
+                    o.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            decompresser.end();
+            return output;
         } catch (IOException e){
             e.printStackTrace();
             return null;
@@ -103,7 +155,7 @@ public class LyricUtils {
                 list.add(line);
             }
         } catch (Exception e) {
-            ILog.e(TAG, "readLyc", e);
+            Log.e(TAG, "readLyc", e);
         } finally {
             if (null != br) {
                 try {
@@ -125,7 +177,6 @@ public class LyricUtils {
         Pattern wordPattern = Pattern.compile("<(\\d+),(\\d+),(\\d+)>([^<]*)");
         Lyric lyric = new Lyric();
         for (String line : list) {
-            ILog.d(line);
             // 歌词信息
             if (line.startsWith("[id:")) {
                 lyric.id  = line.replace("[id:", "").replace("]", "");

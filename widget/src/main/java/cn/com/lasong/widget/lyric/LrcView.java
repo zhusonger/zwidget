@@ -1,6 +1,7 @@
 package cn.com.lasong.widget.lyric;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,9 +18,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
-
-import cn.com.lasong.utils.DeviceUtils;
-import cn.com.lasong.utils.ILog;
 
 /**
  * Author: zhusong
@@ -43,9 +41,9 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
     // =====Draw=======//
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     // 不在播放中的字体大小
-    private final int DEFAULT_TEXT_SIZE_PX = DeviceUtils.sp2px(16);
+    private final int DEFAULT_TEXT_SIZE_PX = sp2px(16);
     // 播放中的字体大小
-    private final int PLAYING_TEXT_SIZE_PX = DeviceUtils.sp2px(18);
+    private final int PLAYING_TEXT_SIZE_PX = sp2px(18);
     // 不在播放中的字体颜色
     private final int DEFAULT_TEXT_COLOR = Color.parseColor("#99FFFFFF");
     // 当前正在播放行的颜色
@@ -69,7 +67,6 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
         mPaint.setColor(DEFAULT_TEXT_COLOR);
         mThread = new Thread(this, "LrcView");
         mThread.start();
-        ILog.d("start render thread");
     }
 
     @Override
@@ -81,9 +78,19 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
         }
     }
 
+    /**
+     * Value of sp to value of px.
+     *
+     * @param spValue The value of sp.
+     * @return value of px
+     */
+    int sp2px(final float spValue) {
+        final float fontScale = Resources.getSystem().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
+    }
+
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        ILog.d("onSurfaceTextureAvailable");
         Canvas canvas = lockCanvas();
         if (null != canvas) {
             mPaint.setTextSize(DEFAULT_TEXT_SIZE_PX);
@@ -98,7 +105,6 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
 
             canvas.drawColor(Color.TRANSPARENT);
         }
-        ILog.d("start Render onSurfaceTextureAvailable");
         unlockCanvasAndPost(canvas);
         synchronized (mFence) {
             mFence.notifyAll();
@@ -178,7 +184,6 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        ILog.d("setVisibility");
         // 显示通知解锁
         if (visibility == View.VISIBLE) {
             synchronized (mFence) {
@@ -276,10 +281,6 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
             if (linePassMs < 0 || linePassMs > curLrc.duration) {
                 linePassMs = linePassMs < 0 ? 0 : curLrc.duration;
                 percent = linePassMs <= 0 ? 0f : 1.0f;
-
-                if (current == 2) {
-                    ILog.d("linePassMs:" + linePassMs+", percent:" + percent+","+curLrc.toString());
-                }
             }
             // 在歌词播放时长范围
             // 由于每个字时长不定, 所以通过对比每个歌词来得到百分比
