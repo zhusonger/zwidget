@@ -1,14 +1,14 @@
 package cn.com.lasong;
 
 import android.os.Bundle;
-import android.view.ViewGroup;
+import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import cn.com.lasong.base.BaseActivity;
+import cn.com.lasong.utils.ILog;
 
 /**
  * Author: zhusong
@@ -28,5 +28,6 @@ public class MainActivity extends BaseActivity {
         mRvMain.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new MainAdapter();
         mRvMain.setAdapter(mAdapter);
+        ILog.setLogLevel(Log.DEBUG);
     }
 }

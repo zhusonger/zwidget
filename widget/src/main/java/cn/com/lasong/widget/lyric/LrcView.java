@@ -27,7 +27,7 @@ import cn.com.lasong.utils.ILog;
  * Date: 2020/03/04
  * Description: 歌词控件
  */
-public class LrcView extends TextureView implements TextureView.SurfaceTextureListener, Runnable {
+public class LrcView extends TextureView implements TextureView.SurfaceTextureListener, ITimeProvider, Runnable {
 
     public LrcView(Context context) {
         this(context, null);
@@ -53,6 +53,9 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
     // 已经播放过的文字的颜色
     private final int PLAYING_PASS_TEXT_COLOR = Color.parseColor("#FF479A");
     private final int ROW = 3;
+
+    // time provider
+    private ITimeProvider mProvider;
 
     public LrcView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -83,6 +86,16 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
         ILog.d("onSurfaceTextureAvailable");
         Canvas canvas = lockCanvas();
         if (null != canvas) {
+            mPaint.setTextSize(DEFAULT_TEXT_SIZE_PX);
+            mPaint.setColor(DEFAULT_TEXT_COLOR);
+            // 计算垂直居中的基线
+            Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+            float centerY = mHeight / 2;
+            float centerX = mWidth / 2;
+            int baselineY = (int) (centerY - (fontMetrics.top + fontMetrics.bottom) / 2);
+            // 画默认歌词样式
+            canvas.drawText("Waiting For You!", centerX, baselineY, mPaint);
+
             canvas.drawColor(Color.TRANSPARENT);
         }
         ILog.d("start Render onSurfaceTextureAvailable");
@@ -105,6 +118,15 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
     }
+
+    /**
+     * 设置时间提供器
+     * @param provider
+     */
+    public void setProvider(ITimeProvider provider) {
+        this.mProvider = provider;
+    }
+
     /**
      * 开始显示歌词
      * @param path
@@ -124,11 +146,15 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
         return false;
     }
 
+    public boolean showLyric(InputStream in) {
+        Lyric lrc = LyricUtils.readLyric(in);
+        return showLyric(lrc);
+    }
+
     private Lyric mLrc;
     // 开始渲染时间
     private long mStartRenderTs;
-    public boolean showLyric(InputStream in) {
-        Lyric lrc = LyricUtils.readLyric(in);
+    public boolean showLyric(Lyric lrc) {
         if (null == lrc) {
             return false;
         }
@@ -170,7 +196,7 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
         boolean renderFinish = false;
         if (null != mLrc) {
             long total = mLrc.total;
-            long passMs = System.currentTimeMillis() - mStartRenderTs;
+            long passMs = getCurrentPosition();;
             renderFinish = passMs > total;
         }
         // surface未准备好
@@ -208,13 +234,14 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
                 continue;
             }
 
-            long passMs = System.currentTimeMillis() - mStartRenderTs;
+            long passMs = getCurrentPosition();
             int lineSize = lines.size();
             int current = 0;
+            long offset = null != mLrc ? mLrc.offset : 0;
             // 查询当前时长播放到哪一行的歌词
             for (int i = 0; i < lineSize; i++) {
                 LyricLine line = lines.get(i);
-                long start = line.offset_start;
+                long start = line.start - offset;
                 long end = start + line.duration;
                 // 当前正在播放行
                 if (passMs >= start) {
@@ -244,11 +271,15 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
             }
             // 计算歌词播放百分比
             float percent;
-            long linePassMs = passMs - curLrc.offset_start;
+            long linePassMs = passMs - (curLrc.start - offset);
             // 不在歌词播放时长范围
             if (linePassMs < 0 || linePassMs > curLrc.duration) {
                 linePassMs = linePassMs < 0 ? 0 : curLrc.duration;
                 percent = linePassMs <= 0 ? 0f : 1.0f;
+
+                if (current == 2) {
+                    ILog.d("linePassMs:" + linePassMs+", percent:" + percent+","+curLrc.toString());
+                }
             }
             // 在歌词播放时长范围
             // 由于每个字时长不定, 所以通过对比每个歌词来得到百分比
@@ -258,16 +289,19 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
                 float passWords = 0;
                 for (int i = 0; i < wordSize; i++) {
                     LyricWord word = words.get(i);
+                    // 这个字已经播放结束
                     if (word.start + word.duration <= linePassMs) {
                         passWords++;
-                    } else if (linePassMs >= word.start){
+                    }
+                    // 这个字正在播放 但是未播放结束
+                    else if (linePassMs >= word.start){
                         passWords += (linePassMs - word.start) * 1.0f / word.duration;
+                        break;
                     }
                 }
                 // 得到当前整行歌词对应的播放百分比
                 percent = wordSize > 0 ? passWords / wordSize : 0;
             }
-
 
 
             Canvas canvas = lockCanvas();
@@ -315,9 +349,9 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
                 centerY += lineHeight;
             }
             unlockCanvasAndPost(canvas);
-            // 间隔50ms进行下一次绘制, 这个可以根据需要调整
+            // 间隔进行下一次绘制, 这个可以根据需要调整
             try {
-                Thread.sleep(50);
+                Thread.sleep(getPollingInterval());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -329,5 +363,21 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
      */
     public void hideLrc() {
         setVisibility(View.GONE);
+    }
+
+    @Override
+    public long getCurrentPosition() {
+        if (null != mProvider) {
+            return mProvider.getCurrentPosition();
+        }
+        return System.currentTimeMillis() - mStartRenderTs;
+    }
+
+    @Override
+    public long getPollingInterval() {
+        if (null != mProvider) {
+            return mProvider.getPollingInterval();
+        }
+        return 50;
     }
 }

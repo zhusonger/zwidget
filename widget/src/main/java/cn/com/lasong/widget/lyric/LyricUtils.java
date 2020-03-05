@@ -159,13 +159,11 @@ public class LyricUtils {
                     String lineStart = lineMatcher.group(1);
                     String lineDuration = lineMatcher.group(2);
                     String lineWords = lineMatcher.group(3);
-                    lrcLine.start = Long.parseLong(lineStart);
-                    lrcLine.offset_start = lrcLine.start + lyric.offset;
-                    lrcLine.duration = Long.parseLong(lineDuration);
+                    lrcLine.start = Long.parseLong(lineStart != null ? lineStart : "0");
+                    lrcLine.duration = Long.parseLong(lineDuration != null ? lineDuration : "0");
                     if (!TextUtils.isEmpty(lineWords)) {
                         StringBuilder stringBuilder = new StringBuilder();
                         Matcher wordMatcher = wordPattern.matcher(lineWords);
-                        long wordTotalDuration = 0;
                         while (wordMatcher.find()) {
                             LyricWord lrcWord = new LyricWord();
                             if (lrcLine.words == null) {
@@ -176,16 +174,23 @@ public class LyricUtils {
                             String wordDuration = wordMatcher.group(2);
                             String wordOffset = wordMatcher.group(3);
                             String word = wordMatcher.group(4);
-                            lrcWord.start = Long.parseLong(wordStart);
-                            lrcWord.duration = Long.parseLong(wordDuration);
-                            lrcWord.offset = Long.parseLong(wordOffset);
+                            lrcWord.start = Long.parseLong(wordStart != null ? wordStart : "0");
+                            lrcWord.duration = Long.parseLong(wordDuration != null ? wordDuration : "0");
+                            lrcWord.offset = Long.parseLong(wordOffset != null ? wordOffset : "0");
                             lrcWord.word = word;
-                            wordTotalDuration += lrcWord.duration;
                             stringBuilder.append(word);
                         }
                         lrcLine.content = stringBuilder.toString();
-                        // 校正某些歌词文件最后一行歌词的持续时间为歌词总时长
-                        lrcLine.duration = Math.min(wordTotalDuration, lrcLine.duration);
+
+                        // 校正某些歌词文件最后一行歌词的持续时间为歌词真实时长
+                        // 部分歌词最后一句时长是歌词总时长, 部分是单行歌词时长
+                        long wordDuration = lrcLine.duration;
+                        if (lrcLine.words != null && lrcLine.words.size() > 0) {
+                            int index = lrcLine.words.size() - 1;
+                            LyricWord lastWord = lrcLine.words.get(index);
+                            wordDuration = Math.min(lastWord.start + lastWord.duration, wordDuration);
+                        }
+                        lrcLine.duration = wordDuration;
                     }
                 }
             }
