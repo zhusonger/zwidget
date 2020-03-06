@@ -42,11 +42,11 @@ publish {
     groupId = rootProject.ext.groupId
     bintrayUser = rootProject.ext.bintrayUser
     bintrayKey = rootProject.ext.bintrayKey
-    website = rootProject.ext.website
     dryRun false
-    //    override true
+    override true
     artifactId = 'widget'
     publishVersion = '0.0.2'
     desc = 'AndroidZ Widget'
+    website = "https://github.com/zhusonger/androidz_widget"
 }
 
