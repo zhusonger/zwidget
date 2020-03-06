@@ -33,4 +33,20 @@ public class Lyric {
     public long offset;//歌词总的偏移值：当为正值的时候，整体向前偏移；当为负值的时候，整体向后偏移。
 
     public List<LyricLine> lines;//存储各行歌词
+
+    @Override
+    public String toString() {
+        return "Lyric{" +
+                "id='" + id + '\'' +
+                ", ar='" + ar + '\'' +
+                ", ti='" + ti + '\'' +
+                ", by='" + by + '\'' +
+                ", hash='" + hash + '\'' +
+                ", al='" + al + '\'' +
+                ", sign='" + sign + '\'' +
+                ", total=" + total +
+                ", offset=" + offset +
+                ", size=" + (null != lines ? lines.size() : 0) +
+                '}';
+    }
 }

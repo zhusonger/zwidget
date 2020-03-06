@@ -35,7 +35,7 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
         this(context, attrs, 0);
     }
 
-    private boolean mDetach = false;
+    private boolean mDestroy = false;
     private final Object mFence = new Object();
     private Thread mThread;
     // =====Draw=======//
@@ -69,15 +69,6 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
         mThread.start();
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mDetach = true;
-        synchronized (mFence) {
-            mFence.notifyAll();
-        }
-    }
-
     /**
      * Value of sp to value of px.
      *
@@ -91,6 +82,7 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        mDestroy = false;
         Canvas canvas = lockCanvas();
         if (null != canvas) {
             mPaint.setTextSize(DEFAULT_TEXT_SIZE_PX);
@@ -117,7 +109,20 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
     }
 
     @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mDestroy = true;
+        synchronized (mFence) {
+            mFence.notifyAll();
+        }
+    }
+
+    @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        mDestroy = true;
+        synchronized (mFence) {
+            mFence.notifyAll();
+        }
         return false;
     }
 
@@ -164,9 +169,10 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
         if (null == lrc) {
             return false;
         }
-        setVisibility(View.VISIBLE);
         mLrc = lrc;
         mStartRenderTs = System.currentTimeMillis();
+        // 最后设置为可见, 解锁
+        setVisibility(View.VISIBLE);
         return true;
     }
 
@@ -198,26 +204,22 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
      * @return
      */
     private boolean isBlock() {
-        boolean renderFinish = false;
-        if (null != mLrc) {
-            long total = mLrc.total;
-            long passMs = getCurrentPosition();;
-            renderFinish = passMs > total;
-        }
         // surface未准备好
         // 当前视图不可见
         // 当前歌词未变化
         // 歌词未开始/没有歌词
-        return !isAvailable()
-                || getVisibility() != View.VISIBLE
-                || (mLrc == null || null == mLrc.lines || mLrc.lines.size() == 0)
-                || renderFinish;
+        boolean isUnAvailable = !isAvailable();
+        boolean isUnVisible = getVisibility() != View.VISIBLE;
+        boolean isInValidLrc = mLrc == null || null == mLrc.lines || mLrc.lines.size() == 0;
+        boolean isPlayEnd = null != mLrc && getCurrentPosition() > mLrc.total;
+
+        return isUnAvailable || isUnVisible || isInValidLrc || isPlayEnd;
     }
 
     @Override
     public void run() {
         // 移除窗口后退出线程
-        while (!mDetach) {
+        while (!mDestroy) {
             // 判断是否不需要画歌词
             if (isBlock()) {
                 // 阻塞渲染歌词线程
@@ -306,6 +308,11 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
 
 
             Canvas canvas = lockCanvas();
+            synchronized (mFence) {
+                if (mDestroy) {
+                    break;
+                }
+            }
             // 清除上一次的内容
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
