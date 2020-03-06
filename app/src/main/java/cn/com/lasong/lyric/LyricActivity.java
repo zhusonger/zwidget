@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.com.lasong.R;
 import cn.com.lasong.base.BaseActivity;
@@ -25,11 +27,10 @@ import cn.com.lasong.widget.lyric.LyricUtils;
  * Date: 2020-03-04
  * Description: 歌词展示页面
  */
-public class LyricActivity extends BaseActivity implements View.OnClickListener {
+public class LyricActivity extends BaseActivity implements View.OnClickListener, Runnable {
 
     private Button mBtnPlay;
     private TextView mTvSong;
-    private LinearLayout mLlDesc;
     private TextView mTvSinger;
     private TextView mTvDuration;
     private LrcView mViewLrc;
@@ -39,15 +40,17 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener 
     private MP3DecodeThread mThread;
     // 负责播放
     private MP3Player mPlayer;
-
+    // 歌词
     private Lyric mLrc;
+    private String mTotalDuration;
+    private Timer mTimer;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lyric);
         mBtnPlay = findViewById(R.id.btn_play);
         mTvSong = findViewById(R.id.tv_song);
-        mLlDesc = findViewById(R.id.ll_desc);
         mTvSinger = findViewById(R.id.tv_singer);
         mTvDuration = findViewById(R.id.tv_duration);
         mViewLrc = findViewById(R.id.view_lrc);
@@ -65,9 +68,16 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener 
         if (null != lyric) {
             mTvSinger.setText(lyric.ar);
             mTvSong.setText(lyric.ti);
-            mTvDuration.setText(String.format("00:00/%s", FormatUtils.getDuration(lyric.total - lyric.offset)));
+            mTotalDuration = FormatUtils.getDuration(lyric.total - lyric.offset);
+            updateTime();
         }
         mLrc = lyric;
+    }
+
+    private void updateTime() {
+        if (null != mTvDuration) {
+            mTvDuration.setText(String.format("%s/%s", FormatUtils.getDuration(null != mPlayer ? mPlayer.getCurrentPosition() : 0), mTotalDuration));
+        }
     }
 
     @Override
@@ -77,6 +87,10 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void stopMP3() {
+        if (null != mTimer) {
+            mTimer.cancel();
+            mTimer = null;
+        }
         if (null != mThread) {
             mThread.interrupt();
             // 等待线程技术
@@ -105,6 +119,15 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener 
         mThread = new MP3DecodeThread(afd);
         mThread.setCallback(mPlayer);
         mThread.start();
+
+        mTimer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(LyricActivity.this);
+            }
+        };
+        mTimer.schedule(timerTask, 0, 1000);
     }
     @Override
     public void onClick(View v) {
@@ -114,5 +137,10 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener 
         if (null != mViewLrc) {
             mViewLrc.showLyric(mLrc);
         }
+    }
+
+    @Override
+    public void run() {
+        updateTime();
     }
 }
