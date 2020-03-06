@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -30,4 +32,17 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+publish {
+    userOrg = rootProject.ext.bintrayUser
+    groupId = rootProject.ext.groupId
+    bintrayUser = rootProject.ext.bintrayUser
+    bintrayKey = rootProject.ext.bintrayKey
+    website = rootProject.ext.website
+    dryRun false
+    //    override true
+    artifactId = 'base'
+    publishVersion = '0.0.1'
+    desc = 'AndroidZ Base Version 0.0.1'
 }
