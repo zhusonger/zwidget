@@ -16,21 +16,21 @@ buildscript {
     }
 }
 
+//最好加上全局编码设置
+tasks.withType(Javadoc) {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
+}
+
 allprojects {
     repositories {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://dl.bintray.com/zhusong/maven" }
-    }
-
-    //加上这些
-    tasks.withType(Javadoc) {
-        options{ encoding "UTF-8"
-            charSet 'UTF-8'
-            links "http://docs.oracle.com/javase/7/docs/api"
-        }
     }
 }
 

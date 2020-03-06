@@ -37,11 +37,25 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
+def jcenter_version = '0.0.2'
 publish {
     userOrg = 'zhusong'
     groupId = 'cn.com.lasong'
     artifactId = 'widget'
-    publishVersion = '0.0.1'
+    publishVersion = jcenter_version
     desc = 'AndroidZ Widget'
-    website = "https://github.com/zhusonger/androidz.git"
+    override true
+    //加载资源
+    Properties properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
+    properties.load( inputStream )
+    bintrayUser = properties.getProperty("bintrayUser")
+    bintrayKey = properties.getProperty("bintrayKey")
+    website = "https://github.com/zhusonger/androidz"
+
+    version {
+        name = jcenter_version
+        desc = "Remove Base Library dependency"
+    }
 }
+
