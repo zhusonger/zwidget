@@ -1,11 +1,14 @@
 # AndroidZ
 AndroidZ开源项目
 
-## App
-引用AndroidZ的开源库的演示demo
-
 ## Base
 基础库
+https://github.com/zhusonger/androidz_base
 
 ## Widget
 控件库
+https://github.com/zhusonger/androidz_widget
+
+## Media
+媒体库
+https://github.com/zhusonger/androidz_media
