@@ -108,14 +108,6 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mDestroy = true;
-        synchronized (mFence) {
-            mFence.notifyAll();
-        }
-    }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
@@ -128,6 +120,15 @@ public class LrcView extends TextureView implements TextureView.SurfaceTextureLi
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mDestroy = true;
+        synchronized (mFence) {
+            mFence.notifyAll();
+        }
     }
 
     /**
