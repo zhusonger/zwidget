@@ -33,6 +33,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'cn.com.lasong:base:0.0.1'
-    implementation 'cn.com.lasong:widget:0.0.2'
+    implementation 'cn.com.lasong:widget:0.0.1'
     implementation 'cn.com.lasong:media:0.0.1'
 }
