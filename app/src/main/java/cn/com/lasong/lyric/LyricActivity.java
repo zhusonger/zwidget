@@ -4,7 +4,6 @@ import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,8 +14,11 @@ import java.util.TimerTask;
 
 import cn.com.lasong.R;
 import cn.com.lasong.base.BaseActivity;
+import cn.com.lasong.media.MP3DecodeThread;
+import cn.com.lasong.media.MP3Player;
 import cn.com.lasong.utils.FormatUtils;
 import cn.com.lasong.utils.ILog;
+import cn.com.lasong.widget.lyric.ITimeProvider;
 import cn.com.lasong.widget.lyric.LrcView;
 import cn.com.lasong.widget.lyric.Lyric;
 import cn.com.lasong.widget.lyric.LyricUtils;
@@ -27,7 +29,7 @@ import cn.com.lasong.widget.lyric.LyricUtils;
  * Date: 2020-03-04
  * Description: 歌词展示页面
  */
-public class LyricActivity extends BaseActivity implements View.OnClickListener, Runnable {
+public class LyricActivity extends BaseActivity implements View.OnClickListener, ITimeProvider, Runnable {
 
     private Button mBtnPlay;
     private TextView mTvSong;
@@ -56,7 +58,7 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener,
         mViewLrc = findViewById(R.id.view_lrc);
         mBtnPlay.setOnClickListener(this);
         mPlayer = new MP3Player();
-        mViewLrc.setProvider(mPlayer);
+        mViewLrc.setProvider(this);
 
         Lyric lyric = null;
         try {
@@ -76,7 +78,7 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener,
 
     private void updateTime() {
         if (null != mTvDuration) {
-            mTvDuration.setText(String.format("%s/%s", FormatUtils.getDuration(null != mPlayer ? mPlayer.getCurrentPosition() : 0), mTotalDuration));
+            mTvDuration.setText(String.format("%s/%s", FormatUtils.getDuration(null != mPlayer ? getCurrentPosition() : 0), mTotalDuration));
         }
     }
 
@@ -142,5 +144,18 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void run() {
         updateTime();
+    }
+
+    @Override
+    public long getCurrentPosition() {
+        if (null != mPlayer) {
+            return mPlayer.getCurrentPosition();
+        }
+        return 0;
+    }
+
+    @Override
+    public long getPollingInterval() {
+        return 50;
     }
 }
