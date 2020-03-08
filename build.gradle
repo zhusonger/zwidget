@@ -2,10 +2,10 @@
 apply from: 'config.gradle'
 buildscript {
     repositories {
-        mavenCentral()
         google()
         jcenter()
-        
+        mavenCentral()
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
@@ -29,9 +29,9 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "https://jitpack.io" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://dl.bintray.com/zhusong/maven" }
+//        maven { url "https://jitpack.io" }
+//        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+//        maven { url "https://dl.bintray.com/zhusong/maven" }
 
     }
 }

@@ -3,7 +3,7 @@ package cn.com.lasong.lyric;
 import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -31,7 +31,7 @@ import cn.com.lasong.widget.lyric.LyricUtils;
  */
 public class LyricActivity extends BaseActivity implements View.OnClickListener, ITimeProvider, Runnable {
 
-    private Button mBtnPlay;
+    private ImageButton mBtnPlay;
     private TextView mTvSong;
     private TextView mTvSinger;
     private TextView mTvDuration;
@@ -133,11 +133,13 @@ public class LyricActivity extends BaseActivity implements View.OnClickListener,
     }
     @Override
     public void onClick(View v) {
-        stopMP3();
+        if (v == mBtnPlay) {
+            stopMP3();
 
-        startPlay();
-        if (null != mViewLrc) {
-            mViewLrc.showLyric(mLrc);
+            startPlay();
+            if (null != mViewLrc) {
+                mViewLrc.showLyric(mLrc);
+            }
         }
     }
 

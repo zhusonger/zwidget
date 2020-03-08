@@ -3,19 +3,17 @@ package cn.com.lasong;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import cn.com.lasong.base.AppManager;
 import cn.com.lasong.lyric.LyricActivity;
+import cn.com.lasong.move.MoveActivity;
 
 /**
  * Author: zhusong
@@ -26,27 +24,32 @@ import cn.com.lasong.lyric.LyricActivity;
 public class MainAdapter extends RecyclerView.Adapter<MainItemHolder> implements View.OnClickListener {
 
     private SparseArray<String> mKeys = new SparseArray<>();
+    private SparseIntArray mIcons = new SparseIntArray();
     private SparseArray<Class> mValues = new SparseArray<>();
 
     public MainAdapter() {
         mKeys.append(0, "歌词控件");
+        mIcons.append(0, R.drawable.ic_lyric);
         mValues.append(0, LyricActivity.class);
+
+        mKeys.append(1, "移动控件");
+        mIcons.append(1, R.drawable.ic_move);
+        mValues.append(1, MoveActivity.class);
     }
 
     @NonNull
     @Override
     public MainItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view =  LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+        View view =  LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
         return new MainItemHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MainItemHolder holder, int position) {
-        TextView textView = (TextView) holder.itemView;
-        String text = mKeys.get(position);
-        textView.setText(text);
-        textView.setTag(position);
-        textView.setOnClickListener(this);
+        holder.mTvName.setText(mKeys.get(position));
+        holder.mIvIcon.setImageResource(mIcons.get(position));
+        holder.itemView.setTag(position);
+        holder.itemView.setOnClickListener(this);
 
     }
 
