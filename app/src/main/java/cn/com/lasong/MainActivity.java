@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import cn.com.lasong.base.BaseActivity;
 import cn.com.lasong.utils.ILog;
-import cn.com.lasong.utils.T;
+import cn.com.lasong.utils.TN;
 
 /**
  * Author: zhusong
@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity {
         if (interval > 0 &&  interval <= 1000) {
             super.onBackPressed();
         } else {
-            T.show("Click Back Again!");
+            TN.show("Click Back Again!");
         }
         mLastBackTs = now;
 
