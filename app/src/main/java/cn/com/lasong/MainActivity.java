@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import cn.com.lasong.base.BaseActivity;
+import cn.com.lasong.media.AVChannelLayout;
+import cn.com.lasong.media.AVSampleFormat;
+import cn.com.lasong.media.Resample;
 import cn.com.lasong.utils.ILog;
 import cn.com.lasong.utils.TN;
 

@@ -18,5 +18,6 @@
         </activity>
         <activity android:name=".lyric.LyricActivity"/>
         <activity android:name=".move.MoveActivity"/>
+        <activity android:name=".resample.ResampleActivity"/>
     </application>
 </manifest>

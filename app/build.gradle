@@ -34,8 +34,12 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'cn.com.lasong:base:0.0.1'
     implementation 'cn.com.lasong:widget:0.0.1'
-    implementation 'cn.com.lasong:media:0.0.3'
+//    implementation 'cn.com.lasong:media:0.0.3'
+
+    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
 
 //    implementation project(":base")
 //    implementation project(":widget")
+    implementation project(":media")
 }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import cn.com.lasong.base.AppManager;
 import cn.com.lasong.lyric.LyricActivity;
 import cn.com.lasong.move.MoveActivity;
+import cn.com.lasong.resample.ResampleActivity;
 
 /**
  * Author: zhusong
@@ -25,7 +26,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainItemHolder> implements
 
     private SparseArray<String> mKeys = new SparseArray<>();
     private SparseIntArray mIcons = new SparseIntArray();
-    private SparseArray<Class> mValues = new SparseArray<>();
+    private SparseArray<Class<?>> mValues = new SparseArray<>();
 
     public MainAdapter() {
         mKeys.append(0, "歌词控件");
@@ -35,6 +36,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainItemHolder> implements
         mKeys.append(1, "移动控件");
         mIcons.append(1, R.drawable.ic_move);
         mValues.append(1, MoveActivity.class);
+
+        mKeys.append(2, "重采样");
+        mIcons.append(2, R.drawable.ic_move);
+        mValues.append(2, ResampleActivity.class);
     }
 
     @NonNull
@@ -65,7 +70,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainItemHolder> implements
             return;
         }
         int position = (int) tag;
-        Class cls = mValues.get(position);
+        Class<?> cls = mValues.get(position);
         Activity activity = AppManager.getInstance().current();
         if (null != activity) {
             Intent intent = new Intent(activity, cls);
