@@ -28,7 +28,7 @@ public class ResampleActivity extends BaseActivity {
         setContentView(R.layout.activity_resample);
         mResample = new Resample();
         mResample.init(AVChannelLayout.AV_CH_LAYOUT_STEREO, AVSampleFormat.AV_SAMPLE_FMT_S16.ordinal(), 44100,
-                AVChannelLayout.AV_CH_LAYOUT_MONO, AVSampleFormat.AV_SAMPLE_FMT_S16.ordinal(), 16000, "/sdcard/resample.pcm");
+                AVChannelLayout.AV_CH_LAYOUT_MONO, AVSampleFormat.AV_SAMPLE_FMT_S16.ordinal(), 44100, "/sdcard/resample.pcm");
     }
 
     @Override
