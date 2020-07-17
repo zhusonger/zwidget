@@ -25,7 +25,10 @@
             <EditText
                 android:id="@+id/input_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="assets/shimian.pcm"
+                android:enabled="false"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -38,11 +41,14 @@
                 android:layout_height="wrap_content"
                 android:text="采样率：" />
 
-            <Spinner
+            <TextView
                 android:id="@+id/in_sample_rates_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/sample_rates"
+                android:gravity="center_vertical"
+                android:minHeight="25dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/src_rate"
                 />
 
         </LinearLayout>
@@ -57,11 +63,15 @@
                 android:layout_height="wrap_content"
                 android:text="声道：" />
 
-            <Spinner
+            <TextView
                 android:id="@+id/in_channel_layouts_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/channel_layouts" />
+                android:gravity="center_vertical"
+                android:minHeight="25dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/src_channel_layouts"
+                />
 
         </LinearLayout>
 
@@ -75,11 +85,14 @@
                 android:layout_height="wrap_content"
                 android:text="采样格式：" />
 
-            <Spinner
+            <TextView
                 android:id="@+id/in_sample_fmts_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/sample_formats" />
+                android:gravity="center_vertical"
+                android:minHeight="25dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/src_fmt" />
 
         </LinearLayout>
 
@@ -171,7 +184,6 @@
             android:id="@+id/convert_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="resample"
             android:text="重采样" />
 
     </LinearLayout>

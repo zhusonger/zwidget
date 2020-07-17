@@ -25,4 +25,7 @@
         <item>88200</item>
         <item>96000</item>
     </string-array>
+    <string name="src_rate">44100</string>
+    <string name="src_channel_layouts">Stereo</string>
+    <string name="src_fmt">S16</string>
 </resources>
