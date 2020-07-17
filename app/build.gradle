@@ -34,9 +34,9 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'cn.com.lasong:base:0.0.1'
     implementation 'cn.com.lasong:widget:0.0.1'
-//    implementation 'cn.com.lasong:media:0.0.4'
-
+    implementation 'cn.com.lasong:media:0.0.4'
+    implementation 'com.droidninja:filepicker:2.2.4'
 //    implementation project(":base")
 //    implementation project(":widget")
-    implementation project(":media")
+//    implementation project(":media")
 }
