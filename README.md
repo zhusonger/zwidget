@@ -1,6 +1,12 @@
 # Widget
 常用控件集合
 
+# 引入
+
+```
+implementation 'cn.com.lasong:widget:0.0.1'
+```
+
 ## v0.0.1  
 
 * 添加歌词控件LrcView  
