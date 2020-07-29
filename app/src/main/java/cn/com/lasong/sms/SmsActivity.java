@@ -138,16 +138,30 @@ public class SmsActivity extends BaseActivity implements View.OnClickListener, I
                         String path = FileUtils.getFilePath(this, uri);
                         BufferedReader reader = new BufferedReader(new FileReader(path));
 
+                        boolean checked = false;
                         String line;
                         while ((line = reader.readLine()) != null) {
+                            if (!checked) {
+                                if(line.length() != 11) {
+                                    break;
+                                }
+                                checked = true;
+                            }
                             mPhoneQueue.offer(line);
                         }
-                        mAllPhoneNum = mPhoneQueue.size();
-                        mTvSend.setText(String.format(Locale.CHINA, "发送成功(0/%d)", mAllPhoneNum));
-                        mTvDeliver.setText(String.format(Locale.CHINA, "送达成功(0/%d)", mAllPhoneNum));
+
+                        if (!mPhoneQueue.isEmpty()) {
+                            mAllPhoneNum = mPhoneQueue.size();
+                            mTvSend.setText(String.format(Locale.CHINA, "发送成功(0/%d)", mAllPhoneNum));
+                            mTvDeliver.setText(String.format(Locale.CHINA, "送达成功(0/%d)", mAllPhoneNum));
+                            TN.show("加载成功");
+                            mCbLoad.setChecked(false);
+                        } else {
+                            TN.show("不符合要求的文件");
+                        }
+
                         reader.close();
-                        mCbLoad.setChecked(false);
-                        TN.show("加载成功");
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         TN.showError("文件读取失败");
@@ -165,10 +179,10 @@ public class SmsActivity extends BaseActivity implements View.OnClickListener, I
             return;
         }
         if (v == mBtnSend) {
-            mBtnSend.setEnabled(false);
             if (mCbLoad.isChecked()) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("*/*").addCategory(Intent.CATEGORY_OPENABLE);
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 try {
                     startActivityForResult(Intent.createChooser(intent, "Choose File"), REQUEST_CODE_DOC);
                 } catch (ActivityNotFoundException e) {
@@ -183,6 +197,12 @@ public class SmsActivity extends BaseActivity implements View.OnClickListener, I
                 return;
             }
 
+            if (mPhoneQueue.isEmpty()) {
+                TN.show("没有有效的电话号码");
+                return;
+            }
+
+            mBtnSend.setEnabled(false);
             SmsManager manager = SmsManager.getDefault();
             int sendNum = 0;
             while (!mPhoneQueue.isEmpty() && sendNum < mOnceNum) {
@@ -201,7 +221,6 @@ public class SmsActivity extends BaseActivity implements View.OnClickListener, I
         if (TextUtils.isEmpty(message)) {
             mAllSendNum++;
             mTvSend.setText(String.format(Locale.CHINA, "发送成功(%d/%d)", mAllSendNum, mAllPhoneNum));
-
         }
         // 发送失败
         else {
