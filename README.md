@@ -18,7 +18,7 @@ implementation 'cn.com.lasong:base:0.0.2'
 https://github.com/zhusonger/androidz_widget
 
 ```
-implementation 'cn.com.lasong:base:0.0.1'
+implementation 'cn.com.lasong:widget:0.0.1'
 ```
 
 ## Media
