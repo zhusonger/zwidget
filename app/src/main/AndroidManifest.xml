@@ -23,5 +23,6 @@
         <activity android:name=".move.MoveActivity" />
         <activity android:name=".resample.ResampleActivity" />
         <activity android:name=".sms.SmsActivity"/>
+        <activity android:name=".widget.WidgetActivity"/>
     </application>
 </manifest>

@@ -85,7 +85,7 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
-base
-widget
-media
+/base/
+/widget/
+/media/
 .DS_Store

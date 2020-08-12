@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="10dp"
+    >
+
+    <cn.com.lasong.widget.text.ResizeTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_widget"
+        app:drawLeftWidth="32dp"
+        app:drawLeftHeight="32dp"
+        android:text="自定义TextView图标大小"
+        android:gravity="center"
+        android:drawablePadding="10dp"
+        android:padding="5dp"
+        android:textSize="16sp"
+        />
+
+    <cn.com.lasong.widget.text.ResizeEditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_widget"
+        app:drawLeftWidth="32dp"
+        app:drawLeftHeight="32dp"
+        android:hint="自定义EditText图标大小"
+        android:gravity="center"
+        android:drawablePadding="10dp"
+        android:background="@null"
+        android:padding="5dp"
+        android:textSize="16sp"
+        />
+</LinearLayout>

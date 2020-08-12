@@ -16,6 +16,7 @@ import cn.com.lasong.lyric.LyricActivity;
 import cn.com.lasong.move.MoveActivity;
 import cn.com.lasong.resample.ResampleActivity;
 import cn.com.lasong.sms.SmsActivity;
+import cn.com.lasong.widget.WidgetActivity;
 
 /**
  * Author: zhusong
@@ -45,6 +46,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainItemHolder> implements
         mKeys.append(3, "短信群发");
         mIcons.append(3, R.drawable.ic_sms);
         mValues.append(3, SmsActivity.class);
+
+        mKeys.append(4, "通用控件");
+        mIcons.append(4, R.drawable.ic_widget);
+        mValues.append(4, WidgetActivity.class);
     }
 
     @NonNull
