@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ResizeTextView">
+        <attr name="drawTopWidth" format="dimension"/>
+        <attr name="drawTopHeight" format="dimension"/>
+        <attr name="drawLeftWidth" format="dimension"/>
+        <attr name="drawLeftHeight" format="dimension"/>
+        <attr name="drawRightWidth" format="dimension"/>
+        <attr name="drawRightHeight" format="dimension"/>
+        <attr name="drawBottomWidth" format="dimension"/>
+        <attr name="drawBottomHeight" format="dimension"/>
+    </declare-styleable>
+</resources>
