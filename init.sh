@@ -15,6 +15,10 @@ rm -rf media
 mkdir media
 git clone git@github.com:zhusonger/androidz_media.git media
 echo "完成Media项目"
+rm -rf plugin
+mkdir plugin
+git clone git@github.com:zhusonger/androidz_plugin.git plugin
+echo "完成Plugin项目"
 echo "完成git clone任务"
 echo "添加jecenter参数"
 echo bintrayUser="zhusong" >> local.properties

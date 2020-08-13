@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import cn.com.lasong.base.AppManager;
+import cn.com.lasong.gallery.GalleryActivity;
 import cn.com.lasong.lyric.LyricActivity;
 import cn.com.lasong.move.MoveActivity;
 import cn.com.lasong.resample.ResampleActivity;
@@ -50,6 +51,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainItemHolder> implements
         mKeys.append(4, "通用控件");
         mIcons.append(4, R.drawable.ic_widget);
         mValues.append(4, WidgetActivity.class);
+
+        mKeys.append(5, "画廊展示");
+        mIcons.append(5, R.drawable.ic_widget);
+        mValues.append(5, GalleryActivity.class);
     }
 
     @NonNull

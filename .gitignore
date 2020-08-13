@@ -88,4 +88,5 @@ lint/tmp/
 /base/
 /widget/
 /media/
+/plugin/
 .DS_Store
