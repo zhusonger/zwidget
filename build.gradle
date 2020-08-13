@@ -24,7 +24,7 @@ buildscript {
 }
 
 allprojects {
-//    apply plugin: 'cn.com.lasong.inject'
+    apply plugin: 'cn.com.lasong.inject'
     repositories {
         google()
         jcenter()
