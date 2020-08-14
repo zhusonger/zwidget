@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
-apply plugin: 'cn.com.lasong.inject'
+//apply plugin: 'cn.com.lasong.inject'
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -27,8 +28,15 @@ android {
     }
 }
 
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -44,11 +52,38 @@ dependencies {
 //    implementation project(":media")
 
     // 单独添加核心 module Transferee, 之后至少还需要添加以下三种图片加载器中的一种
-    implementation 'com.github.Hitomis.transferee:Transferee:1.6.1'
-
+    implementation ('com.github.Hitomis.transferee:Transferee:1.6.1@aar')
     // 添加 Glide 图片加载器
     implementation 'com.github.Hitomis.transferee:GlideImageLoader:1.6.1'
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
+
+//inject {
+//    base {
+//        group = "cn.com.lasong:base:0.0.2"
+//        modify = [
+//                {
+//                    className = "cn.com.lasong.base.DefaultActivityLifeCallback"
+//                    methodName = "onActivitySaveInstanceState"
+//                    signature = "(Landroid/app/Activity;Landroid/os/Bundle;)V"
+//                },
+//                {
+//                    className = "cn.com.lasong.utils"
+//                    methodName = "setLogLevel"
+//                    signature = "(I)V"
+//                }
+//        ]
+//    }
+//    widget {
+//        group = "cn.com.lasong:widget:0.0.2"
+//        modify = [
+//                {
+//                    className = "cn.com.lasong.widget.lyric.LrcView"
+//                    methodName = "sp2px"
+//                    signature = "(F)I"
+//                }
+//        ]
+//    }
+//}

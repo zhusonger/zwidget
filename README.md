@@ -46,12 +46,7 @@ buildscript {
         classpath "cn.com.lasong:plugin:1.0.0"
     }
 }
-allprojects {
-    // 2. 所有模块都添加插件/单个模块应用插件
-    apply plugin: 'cn.com.lasong.inject'
-    repositories {
-        google()
-        jcenter()
-    }
-}
+
+// module的build.gradle
+apply plugin: 'cn.com.lasong.inject'
 ```
