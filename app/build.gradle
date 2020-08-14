@@ -1,6 +1,28 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'cn.com.lasong.inject'
 apply plugin: 'cn.com.lasong.time'
+apply plugin: 'cn.com.lasong.inject'
+allInjects {
+    widget {
+        group = "cn.com.lasong:widget:0.0.2"
+    }
+
+    widget2 {
+        group = "cn.com.lasong:widget:0.0.2"
+        injects = [
+              [
+                    "className" : "cn.com.lasong.base.DefaultActivityLifeCallback",
+                    "methodName" : "onActivitySaveInstanceState",
+                    "signature" : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
+              ],
+              [
+                      "className" : "cn.com.lasong.base.DefaultActivityLifeCallback",
+                      "methodName" : "onActivitySaveInstanceState",
+                      "signature" : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
+              ]
+        ]
+
+    }
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -53,7 +75,7 @@ dependencies {
 //    implementation project(":media")
 
     // 单独添加核心 module Transferee, 之后至少还需要添加以下三种图片加载器中的一种
-    implementation ('com.github.Hitomis.transferee:Transferee:1.6.1@aar')
+    implementation('com.github.Hitomis.transferee:Transferee:1.6.1@aar')
     // 添加 Glide 图片加载器
     implementation 'com.github.Hitomis.transferee:GlideImageLoader:1.6.1'
 
@@ -61,21 +83,20 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
 
-//def outExt = getExtensions().create("inject", OuterExt)
+
+//
 //inject {
 //    base {
-//        group "cn.com.lasong:base:0.0.2"
-//        modify {
-//                hook1 {
-//                    className = "cn.com.lasong.base.DefaultActivityLifeCallback"
-//                    methodName = "onActivitySaveInstanceState"
-//                    signature = "(Landroid/app/Activity;Landroid/os/Bundle;)V"
-//                }
-//                hook2 {
-//                    className = "cn.com.lasong.utils"
-//                    methodName = "setLogLevel"
-//                    signature = "(I)V"
-//                }
+//        group "cn.com.lasong:base:0.0.2",
+//        {
+//            className = "cn.com.lasong.base.DefaultActivityLifeCallback"
+//            methodName = "onActivitySaveInstanceState"
+//            signature = "(Landroid/app/Activity;Landroid/os/Bundle;)V"
+//        },
+//        {
+//            className = "cn.com.lasong.utils"
+//            methodName = "setLogLevel"
+//            signature = "(I)V"
 //        }
 //    }
 //    widget {
