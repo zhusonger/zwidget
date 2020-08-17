@@ -1,26 +1,24 @@
 apply plugin: 'com.android.application'
-apply plugin: 'cn.com.lasong.time'
+//apply plugin: 'cn.com.lasong.time'
 apply plugin: 'cn.com.lasong.inject'
 allInjects {
-    widget {
-        group = "cn.com.lasong:widget:0.0.2"
-    }
+    injectDebug true
+    injectDomains {
+        widget {
+            group "cn.com.lasong:widget:0.0.2"
+        }
 
-    widget2 {
-        group = "cn.com.lasong:widget:0.0.2"
-        injects = [
-              [
-                    "className" : "cn.com.lasong.base.DefaultActivityLifeCallback",
-                    "methodName" : "onActivitySaveInstanceState",
-                    "signature" : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
-              ],
-              [
-                      "className" : "cn.com.lasong.base.DefaultActivityLifeCallback",
-                      "methodName" : "onActivitySaveInstanceState",
-                      "signature" : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
-              ]
-        ]
+        widget2 {
+            group "cn.com.lasong:widget:0.0.2"
+            injects = [
+                    {
+                            className "cn.com.lasong.base.DefaultActivityLifeCallback"
+                            methodName "onActivitySaveInstanceState"
+                            signature "(Landroid/app/Activity;Landroid/os/Bundle;)V"
+                    }
+            ]
 
+        }
     }
 }
 
@@ -75,7 +73,7 @@ dependencies {
 //    implementation project(":media")
 
     // 单独添加核心 module Transferee, 之后至少还需要添加以下三种图片加载器中的一种
-    implementation('com.github.Hitomis.transferee:Transferee:1.6.1@aar')
+    implementation "com.github.Hitomis.transferee:Transferee:1.6.1@aar"
     // 添加 Glide 图片加载器
     implementation 'com.github.Hitomis.transferee:GlideImageLoader:1.6.1'
 
