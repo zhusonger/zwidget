@@ -11,11 +11,16 @@ allInjects {
         widget2 {
             group "cn.com.lasong:widget:0.0.2"
             injects = [
-                    {
-                            className "cn.com.lasong.base.DefaultActivityLifeCallback"
-                            methodName "onActivitySaveInstanceState"
-                            signature "(Landroid/app/Activity;Landroid/os/Bundle;)V"
-                    }
+                    [
+                            className : "cn.com.lasong.base.DefaultActivityLifeCallback",
+                            methodName: "onActivitySaveInstanceState",
+                            signature : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
+                    ],
+                    [
+                            className : "cn.com.lasong.base.DefaultActivityLifeCallback2",
+                            methodName: "onActivitySaveInstanceState2",
+                            signature : "()V"
+                    ]
             ]
 
         }
