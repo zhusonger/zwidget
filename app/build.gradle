@@ -4,25 +4,24 @@ apply plugin: 'cn.com.lasong.inject'
 allInjects {
     injectDebug true
     injectDomains {
-        widget {
-            group "cn.com.lasong:widget:0.0.2"
-        }
-
-        widget2 {
-            group "cn.com.lasong:widget:0.0.2"
-            injects = [
+        base {
+            group "cn.com.lasong:base:0.0.2"
+            clzModify = [
                     [
-                            className : "cn.com.lasong.base.DefaultActivityLifeCallback",
-                            methodName: "onActivitySaveInstanceState",
+                            className : 'cn.com.lasong.base.AppManager$Holder',
                             signature : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
                     ],
                     [
-                            className : "cn.com.lasong.base.DefaultActivityLifeCallback2",
-                            methodName: "onActivitySaveInstanceState2",
+                            className : 'cn.com.lasong.base.AppManager',
+                            methodName: "getInstance",
                             signature : "()V"
                     ]
             ]
-
+            clzNew = [
+                    [
+                            className : 'cn.com.lasong.base.Test'
+                    ]
+            ]
         }
     }
 }
