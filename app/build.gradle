@@ -4,6 +4,7 @@ apply plugin: 'cn.com.lasong.inject'
 allInjects {
     injectDebug true
     injectDomains {
+        // 远程库
         base {
             // 注入的库名
             // 主要减少性能消耗, 有针对性的进行处理
@@ -29,10 +30,13 @@ allInjects {
             ]
         }
 
+        // 本地jar包
         agora {
             group "agora-rtc-sdk"
             clzNewDir "classes/agora"
         }
+
+        // 本地项目
         app {
             group ":app"
             clzNewDir "classes/app"
