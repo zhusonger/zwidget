@@ -90,3 +90,4 @@ lint/tmp/
 /media/
 /plugin/
 .DS_Store
+snapshotRepo
