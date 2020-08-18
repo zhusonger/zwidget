@@ -28,6 +28,15 @@ allInjects {
                     ]
             ]
         }
+
+        agora {
+            group "agora-rtc-sdk"
+            clzNewDir "classes/agora"
+        }
+        app {
+            group ":app"
+            clzNewDir "classes/app"
+        }
     }
 }
 
