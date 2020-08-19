@@ -1,48 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'cn.com.lasong.time'
 apply plugin: 'cn.com.lasong.inject'
-allInjects {
-    injectDebug true
-    injectDomains {
-        // 远程库
-        base {
-            // 注入的库名
-            // 主要减少性能消耗, 有针对性的进行处理
-            // 1.implementation方式的使用[具体的引入库], 如 cn.com.lasong:widget:0.0.2
-            // 2.本地的jar或者aar使用[文件名, 不用后缀], 如 agora-rtc-sdk
-            // 3.项目源码使用[:项目名称:子项目名称1:子项目名称2],
-            //  3.1.如应用模块叫app, 就使用:app
-            //  3.2.app模块下的子模块sub, 就使用 :app:sub
-            group "cn.com.lasong:base:0.0.2"
-            // 新增字节码文件夹路径
-            clzNewDir "classes/base"
-            // 需要修改的字节码包
-            clzModify = [
-                    [
-                            className : 'cn.com.lasong.base.AppManager$Holder',
-                            signature : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
-                    ],
-                    [
-                            className : 'cn.com.lasong.base.AppManager',
-                            methodName: "getInstance",
-                            signature : "()V"
-                    ]
-            ]
-        }
-
-        // 本地jar包
-        agora {
-            group "agora-rtc-sdk"
-            clzNewDir "classes/agora"
-        }
-
-        // 本地项目
-        app {
-            group ":app"
-            clzNewDir "classes/app"
-        }
-    }
-}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -87,10 +45,10 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
-    implementation 'cn.com.lasong:base:0.0.2'
+//    implementation 'cn.com.lasong:base:0.0.2'
     implementation 'cn.com.lasong:widget:0.0.2'
     implementation 'cn.com.lasong:media:0.0.4'
-//    implementation project(":base")
+    implementation project(":base")
 //    implementation project(":widget")
 //    implementation project(":media")
 
@@ -103,34 +61,47 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
 
+allInjects {
+    injectDebug true
+    injectDomains {
+        // 远程库
+        base {
+            // 注入的库名
+            // 主要减少性能消耗, 有针对性的进行处理
+            // 1.implementation方式的使用[具体的引入库], 如 cn.com.lasong:widget:0.0.2
+            // 2.本地的jar或者aar使用[文件名, 不用后缀], 如 agora-rtc-sdk
+            // 3.项目源码使用[:项目名称:子项目名称1:子项目名称2],
+            //  3.1.如应用模块叫app, 就使用:app
+            //  3.2.app模块下的子模块sub, 就使用 :app:sub
+            group "cn.com.lasong:base:0.0.2"
+            // 新增字节码文件夹路径
+            clzNewDir "classes/base"
+            // 需要修改的字节码包
+            clzModify = [
+                    [
+                            className : 'cn.com.lasong.base.AppManager$Holder',
+                            signature : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
+                    ],
+                    [
+                            className : 'cn.com.lasong.base.AppManager',
+                            methodName: "getInstance",
+                            signature : "()V"
+                    ]
+            ]
+        }
 
-//
-//inject {
-//    base {
-//        group "cn.com.lasong:base:0.0.2",
-//        {
-//            className = "cn.com.lasong.base.DefaultActivityLifeCallback"
-//            methodName = "onActivitySaveInstanceState"
-//            signature = "(Landroid/app/Activity;Landroid/os/Bundle;)V"
-//        },
-//        {
-//            className = "cn.com.lasong.utils"
-//            methodName = "setLogLevel"
-//            signature = "(I)V"
-//        }
-//    }
-//    widget {
-//        group "cn.com.lasong:widget:0.0.2"
-//        modify {
-//                hook1 {
-//                    className = "cn.com.lasong.widget.lyric.LrcView"
-//                    methodName = "sp2px"
-//                    signature = "(F)I"
-//                }
-//        }
-//    }
-//}
-//
-//task testExt << {
-//    println outExt
-//}
+        // 本地jar包
+        agora {
+            group "agora-rtc-sdk"
+            clzNewDir "classes/agora"
+        }
+
+        // 本地项目, 只能注入到当前应用插件的项目
+        // 比如这里设置依赖的本地库 :base, 这里是不会处理的
+        // 优先级是被依赖的项目先进行注入, 再注入当前的项目
+        app {
+            group ":app"
+            clzNewDir "classes/app"
+        }
+    }
+}
