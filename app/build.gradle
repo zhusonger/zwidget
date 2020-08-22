@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'cn.com.lasong.time'
+//apply plugin: 'cn.com.lasong.time'
 apply plugin: 'cn.com.lasong.inject'
 
 android {
