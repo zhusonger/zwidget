@@ -76,24 +76,50 @@ allInjects {
             group "cn.com.lasong:base:0.0.2"
             // 新增字节码文件夹路径
             clzNewDir "classes/base"
-            // 需要修改的字节码包
-            clzModify = [
-                    [
-                            className : 'cn.com.lasong.base.AppManager$Holder',
-                            signature : "(Landroid/app/Activity;Landroid/os/Bundle;)V"
-                    ],
-                    [
-                            className : 'cn.com.lasong.base.AppManager',
-                            methodName: "getInstance",
-                            signature : "()V"
-                    ]
-            ]
         }
 
         // 本地jar包
         agora {
             group "agora-rtc-sdk"
             clzNewDir "classes/agora"
+            // 需要修改的字节码包
+            clzModify = [
+                    [
+                            className : 'io.agora.rtc.internal.RtcEngineImpl',
+                            importPackages : [
+                                    "java.io",
+                                    "android.util.Log",
+                                    "io.agora.rtc.internal"
+                            ],
+                            addFields : [
+                                    "public String stringValue;",
+                                    "public int intValue;",
+                                    "public static boolean booleanValue;"
+                            ],
+                            addMethods : [
+                                    """
+                                    public RtcEngineImpl addMethod() {
+                                        RtcEngineImpl aaa = null;
+                                        intValue = 1;
+                                        booleanValue = false;
+                                        stringValue = "addMethod";
+                                        System.out.println("addMethod");
+                                        return aaa;
+                                    }
+                                    """,
+                                    """
+                                    public void addMethod_jhdfsadf() {
+                                        RtcEngineImpl hhhhh;
+
+                                        if (booleanValue) {
+                                             hhhhh = this;
+                                        }
+                                        Log.e("Test", "addMethod_jhdfsadf");
+                                    }
+                                    """,
+                            ]
+                    ]
+            ]
         }
 
         // 本地项目, 只能注入到当前应用插件的项目
