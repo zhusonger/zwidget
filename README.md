@@ -49,3 +49,47 @@ implementation 'cn.com.lasong:widget:0.0.1'
     android:textSize="16sp"
     />
 ```
+
+## v0.0.3
+
+添加阴影控件, 自定义背景色与阴影色, 阴影控件与实际展示内容大小一致, 不需要预留阴影的空间
+
+```xml
+<cn.com.lasong.widget.shadow.ShadowLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    app:bgColor="@android:color/white"
+    app:bgRadius="10dp"
+    app:shadowColor="#4D000000"
+    app:shadowRadius="4dp"
+    app:shadowDx="3dp"
+    app:shadowDy="3dp"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minWidth="150dp"
+            android:minHeight="40dp"
+            android:text="阴影控件内容"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minWidth="150dp"
+            android:minHeight="40dp"
+            android:text="阴影控件内容" />
+    </LinearLayout>
+</cn.com.lasong.widget.shadow.ShadowLayout>
+```
