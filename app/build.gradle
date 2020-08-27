@@ -46,7 +46,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
 //    implementation 'cn.com.lasong:base:0.0.2'
-    implementation 'cn.com.lasong:widget:0.0.2'
+    implementation 'cn.com.lasong:widget:0.0.3'
     implementation 'cn.com.lasong:media:0.0.4'
     implementation project(":base")
 //    implementation project(":widget")
@@ -89,12 +89,14 @@ allInjects {
                             importPackages : [
                                     "java.io",
                                     "android.util.Log",
+                                    "cn.com.lasong",
                                     "io.agora.rtc.internal"
                             ],
                             addFields : [
                                     "public String stringValue;",
                                     "public int intValue;",
-                                    "public static boolean booleanValue;"
+                                    "public static boolean booleanValue;",
+                                    "public TestCreate2 test;"
                             ],
                             addMethods : [
                                     """
@@ -124,6 +126,7 @@ allInjects {
                             importPackages : [
                                     "java.io",
                                     "android.util.Log",
+                                    "cn.com.lasong",
                                     "io.agora.rtc.internal"
                             ],
                             addFields : [
