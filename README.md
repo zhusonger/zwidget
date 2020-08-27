@@ -8,7 +8,7 @@ AndroidZ开源项目
 https://github.com/zhusonger/androidz_base
 
 ```
-implementation 'cn.com.lasong:base:0.0.2'
+implementation 'cn.com.lasong:base:latest.release'
 ```
 
 ## Widget
@@ -18,7 +18,7 @@ implementation 'cn.com.lasong:base:0.0.2'
 https://github.com/zhusonger/androidz_widget
 
 ```
-implementation 'cn.com.lasong:widget:0.0.1'
+implementation 'cn.com.lasong:widget:latest.release'
 ```
 
 ## Media
@@ -28,7 +28,7 @@ implementation 'cn.com.lasong:widget:0.0.1'
 https://github.com/zhusonger/androidz_media
 
 ```
-implementation 'cn.com.lasong:media:0.0.4'
+implementation 'cn.com.lasong:media:latest.release'
 ```
 
 ## Plugin
