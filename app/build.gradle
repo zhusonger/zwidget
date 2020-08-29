@@ -85,20 +85,20 @@ allInjects {
             // 需要修改的字节码包
             clzModify = [
                     [
-                            className : 'io.agora.rtc.internal.RtcEngineImpl',
-                            importPackages : [
+                            className     : 'io.agora.rtc.internal.RtcEngineImpl',
+                            importPackages: [
                                     "java.io",
                                     "android.util.Log",
                                     "cn.com.lasong",
                                     "io.agora.rtc.internal"
                             ],
-                            addFields : [
+                            addFields     : [
                                     "public String stringValue;",
                                     "public int intValue;",
                                     "public static boolean booleanValue;",
                                     "public TestCreate2 test;"
                             ],
-                            addMethods : [
+                            addMethods    : [
                                     """
                                     public RtcEngineImpl addMethod() {
                                         RtcEngineImpl aaa = null;
@@ -119,22 +119,41 @@ allInjects {
                                         Log.e("Test", "addMethod_jhdfsadf");
                                     }
                                     """,
+                            ],
+                            modifyMethods : [
+                                    [
+                                            name   : "checkVoipPermissions",
+                                            params : "(Landroid.content.Context;I)",
+                                            content: """Log.e("Test", "checkVoipPermissions");""",
+                                            type   : "insertBefore"
+                                    ],
+                                    [
+                                            name     : "pullPlaybackAudioFrame",
+                                            params   : "([BI)",
+                                            modifiers: "private",
+                                            content  :
+                                                    """
+                                                    Log.e("Test", "pullPlaybackAudioFrame"+ \$2); 
+                                                    """,
+                                            type     : "insertBefore"
+                                    ]
                             ]
+
                     ],
                     [
-                            className : 'cn.com.lasong.TestCreate2',
-                            importPackages : [
+                            className     : 'cn.com.lasong.TestCreate2',
+                            importPackages: [
                                     "java.io",
                                     "android.util.Log",
                                     "cn.com.lasong",
                                     "io.agora.rtc.internal"
                             ],
-                            addFields : [
+                            addFields     : [
                                     "public String stringValue;",
                                     "public int intValue;",
                                     "public static boolean booleanValue;"
                             ],
-                            addMethods : [
+                            addMethods    : [
                                     """
                                     public RtcEngineImpl addMethod() {
                                         RtcEngineImpl aaa = null;
