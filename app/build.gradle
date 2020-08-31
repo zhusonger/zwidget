@@ -62,7 +62,9 @@ dependencies {
 }
 
 allInjects {
+    // 是否开启debug 目前主要打印日志
     injectDebug true
+    // 注入的节点, 区分注入的对象
     injectDomains {
         // 远程库
         base {

@@ -43,7 +43,7 @@ https://github.com/zhusonger/androidz_plugin
 buildscript {
     dependencies {
         // 1.添加classpath
-        classpath "cn.com.lasong:plugin:1.0.0"
+        classpath "cn.com.lasong:plugin:0.0.1"
     }
 }
 
