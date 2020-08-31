@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'cn.com.lasong.time'
+apply plugin: 'cn.com.lasong.time'
 apply plugin: 'cn.com.lasong.inject'
 
 android {
@@ -185,6 +185,98 @@ allInjects {
         app {
             group ":app"
             clzNewDir "classes/app"
+            clzModify = [
+                    [
+                            className     : 'cn.com.lasong.MainActivity',
+                            importPackages: [
+                                    "java.io",
+                                    "android.util.Log",
+                                    "cn.com.lasong"
+                            ],
+                            addFields     : [
+                                    "public String stringValue;",
+                                    "public int intValue;",
+                                    "public static boolean booleanValue;",
+                                    "public TestCreate3 test;"
+                            ],
+                            addMethods    : [
+                                    """
+                                    public MainActivity addMethod() {
+                                        MainActivity aaa = this;
+                                        intValue = 1;
+                                        booleanValue = true;
+                                        stringValue = "addMethod";
+                                        System.out.println("addMethod");
+                                        return aaa;
+                                    }
+                                    """,
+                                    """
+                                    public void addMethod_jhdfsadf() {
+                                        MainActivity hhhhh;
+
+                                        if (booleanValue) {
+                                             test = new TestCreate3();
+                                             hhhhh = test.addMethod();
+                                        }
+                                        
+                                        Log.e("Test", "addMethod_jhdfsadf");
+                                    }
+                                    """,
+                            ],
+                            modifyMethods : [
+                                    [
+                                            name   : "onBackPressed",
+                                            params : "()",
+                                            content: """Log.e("Test", "onBackPressed"); addMethod(); addMethod_jhdfsadf();""",
+                                            type   : "insertBefore"
+                                    ]
+                            ]
+
+                    ],
+                    [
+                            className     : 'cn.com.lasong.TestCreate3',
+                            importPackages: [
+                                    "java.io",
+                                    "android.util.Log",
+                                    "cn.com.lasong"
+                            ],
+                            addFields     : [
+                                    "public String stringValue;",
+                                    "public int intValue;",
+                                    "public static boolean booleanValue;"
+                            ],
+                            addMethods    : [
+                                    """
+                                    public MainActivity addMethod() {
+                                        MainActivity aaa = null;
+                                        intValue = 1;
+                                        booleanValue = false;
+                                        stringValue = "addMethod";
+                                        System.out.println("addMethod");
+                                        return aaa;
+                                    }
+                                    """,
+                                    """
+                                    public void addMethod_jhdfsadf() {
+                                        MainActivity hhhhh;
+
+                                        if (booleanValue) {
+                                             hhhhh = null;
+                                        }
+                                        Log.e("Test", "addMethod_jhdfsadf");
+                                    }
+                                    """,
+                            ],
+                            modifyMethods : [
+                                    [
+                                            name   : "test",
+                                            params : "()",
+                                            content: """Log.e("Test", "test");""",
+                                            type   : "insertBefore"
+                                    ]
+                            ]
+                    ]
+            ]
         }
     }
 }
