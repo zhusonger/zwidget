@@ -65,7 +65,7 @@ public class ShadowLayout extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (null != shadowView) {
+        if (changed && null != shadowView) {
             LayoutParams lp = (LayoutParams) shadowView.getLayoutParams();
             if (null == lp) {
                 lp = generateDefaultLayoutParams();
