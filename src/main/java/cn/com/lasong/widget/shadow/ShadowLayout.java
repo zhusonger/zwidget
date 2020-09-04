@@ -72,12 +72,6 @@ public class ShadowLayout extends FrameLayout {
         isResizeShadow = false;
     }
 
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
-        isResizeShadow = true;
-    }
-
     public void requestLayoutShadow() {
         isResizeShadow = true;
         requestLayout();
