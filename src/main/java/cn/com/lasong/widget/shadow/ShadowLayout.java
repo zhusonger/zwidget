@@ -30,6 +30,9 @@ public class ShadowLayout extends FrameLayout {
 
 
     private ShadowView shadowView;
+    // 是否需要重新设置阴影大小
+    private boolean isResizeShadow;
+
     public ShadowLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         shadowView = new ShadowView(getContext());
@@ -60,18 +63,38 @@ public class ShadowLayout extends FrameLayout {
         if (parent instanceof ViewGroup) {
             ((ViewGroup) parent).setClipChildren(false);
         }
+        isResizeShadow = true;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        isResizeShadow = false;
+    }
+
+    @Override
+    public void requestLayout() {
+        super.requestLayout();
+        isResizeShadow = true;
+    }
+
+    public void requestLayoutShadow() {
+        isResizeShadow = true;
+        requestLayout();
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (changed && null != shadowView) {
+        if (isResizeShadow && changed && null != shadowView) {
+            isResizeShadow = false;
+            final float shadowSize = shadowView.shadowRadius * 2;
             LayoutParams lp = (LayoutParams) shadowView.getLayoutParams();
             if (null == lp) {
                 lp = generateDefaultLayoutParams();
             }
-            lp.width = (int) ((right - left) + shadowView.shadowRadius * 2);
-            lp.height = (int) ((bottom - top) + shadowView.shadowRadius * 2);
+            lp.width = (int) ((getMeasuredWidth()) + shadowSize);
+            lp.height = (int) ((getMeasuredHeight()) + shadowSize);
             int margin = -(int) shadowView.shadowRadius;
             lp.setMargins(margin, margin, margin, margin);
             shadowView.setLayoutParams(lp);
