@@ -34,7 +34,7 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
         mIvIcon = findViewById(R.id.iv_icon);
         mIvIcon.setOnClickListener(this);
         // 设置默认图
-        Glide.with(this).load(SourceConfig.getMixingSourceGroup().get(0)).into(mIvIcon);
+        Glide.with(this).load(SourceConfig.getThumbSourceGroup().get(0)).into(mIvIcon);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         if (v == mIvIcon) {
             TransferConfig config = TransferConfig.build()
-                    .setSourceUrlList(SourceConfig.getMixingSourceGroup())
+                    .setSourceUrlList(SourceConfig.getThumbSourceGroup())
                     .setProgressIndicator(new ProgressPieIndicator())
                     .setImageLoader(GlideImageLoader.with(getApplicationContext()))
                     .enableHideThumb(false)
