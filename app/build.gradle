@@ -60,3 +60,38 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
+
+allInjects {
+    // 是否开启debug 目前主要打印日志
+    injectDebug true
+    // 注入的节点, 区分注入的对象
+    injectDomains {
+        Transferee {
+            group "com.github.Hitomis.transferee:Transferee:1.6.1"
+            // 需要修改的字节码包
+            clzModify = [
+                    [
+                            className     : 'com.hitomi.tilibrary.transfer.TransferAdapter',
+
+                            // 修改方法
+                            modifyMethods : [
+                                    [
+                                            name   : "getImageItem",
+                                            params : "(I)",
+                                            type   : "setBody",
+                                            content:
+                                                    """{
+                                                    Log.d("Test", "getImageItem");
+                                                    FrameLayout parentLayout = (FrameLayout) containLayoutArray.get(\$1);
+                                                    if (parentLayout != null && parentLayout.getChildAt(0) instanceof TransferImage) {
+                                                        return ((TransferImage) parentLayout.getChildAt(0));
+                                                    }
+                                                    return null;
+                                                    }"""
+                                    ]
+                            ]
+                    ]
+            ]
+        }
+    }
+}
