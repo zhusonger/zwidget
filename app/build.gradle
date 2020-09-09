@@ -72,6 +72,7 @@ allInjects {
             clzModify = [
                     [
                             className     : 'com.hitomi.tilibrary.transfer.TransferAdapter',
+                            modifiers: "public",
                             // 修改方法
                             modifyMethods : [
                                     [
