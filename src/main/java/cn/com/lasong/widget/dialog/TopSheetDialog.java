@@ -119,6 +119,14 @@ public class TopSheetDialog extends AppCompatDialog {
         return context;
     }
 
+    /**
+     * 获取容器布局
+     * @return
+     */
+    protected final FrameLayout getContainer() {
+        return container;
+    }
+
     @Override
     public void setContentView(View view) {
         super.setContentView(wrapInTopSheet(0, view, null));
