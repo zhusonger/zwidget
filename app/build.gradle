@@ -46,7 +46,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'cn.com.lasong:base:0.0.2'
-    implementation 'cn.com.lasong:widget:0.0.3'
+    implementation 'cn.com.lasong:widget:0.0.4'
     implementation 'cn.com.lasong:media:0.0.4'
 //    implementation project(":base")
 //    implementation project(":widget")
@@ -59,6 +59,8 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    implementation 'com.github.MZCretin:CitySelect:1.0.5'
 }
 
 allInjects {
@@ -74,7 +76,7 @@ allInjects {
                             className     : 'com.hitomi.tilibrary.transfer.TransferAdapter',
                             modifiers: "public",
                             // 修改方法
-                            modifyMethods : [
+                            injectList : [
                                     [
                                             name   : "newParentLayout",
                                             params : "(Landroid.view.ViewGroup;I)",
@@ -117,6 +119,48 @@ allInjects {
                                                     }
                                                     return null;
                                                     }"""
+                                    ]
+                            ]
+                    ]
+            ]
+        }
+
+        CitySelect {
+            group "com.github.MZCretin:CitySelect:1.0.5"
+            // 需要修改的字节码包
+            clzModify = [
+                    [
+                            className: "com.cretin.tools.cityselect.view.CitySelectView",
+                            injectList : [
+                                    [
+                                            name: "init",
+                                            params: "(Landroid/content/Context;Landroid/util/AttributeSet;I)",
+                                            type: "insertBefore",
+                                            content: "android.view.View.inflate(\$1, 123, this);"
+                                    ],
+                                    [
+                                            name: "init",
+                                            params: "(Landroid/content/Context;Landroid/util/AttributeSet;I)",
+                                            type: "deleteAt",
+                                            lineRange: "2#1"
+                                    ]
+                            ]
+                    ],
+                    [
+                            className: "com.cretin.tools.cityselect.view.FastIndexView",
+                            injectList : [
+                                    [
+                                            isConstructor : true,
+                                            params: "(Landroid/content/Context;Landroid/util/AttributeSet;I)",
+                                            type: "deleteAt",
+                                            lineRange: "6"
+                                    ],
+                                    [
+                                            isConstructor : true,
+                                            params: "(Landroid/content/Context;Landroid/util/AttributeSet;I)",
+                                            type: "insertAt",
+                                            lineNum:6,
+                                            content: """selectedColor = Color.parseColor("#999999");"""
                                     ]
                             ]
                     ]

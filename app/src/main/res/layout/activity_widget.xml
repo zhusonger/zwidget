@@ -70,4 +70,12 @@
                 android:text="阴影控件内容" />
         </LinearLayout>
     </cn.com.lasong.widget.shadow.ShadowLayout>
+
+    <Button
+        android:id="@+id/btn_top_sheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="顶部可拖动弹窗"
+        android:onClick="onClick"
+        />
 </LinearLayout>
