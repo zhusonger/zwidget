@@ -93,3 +93,20 @@ implementation 'cn.com.lasong:widget:latest.release'
     </LinearLayout>
 </cn.com.lasong.widget.shadow.ShadowLayout>
 ```
+
+## v0.0.4
+
+添加顶部滑入弹窗
+
+```java
+// 可使用自定义theme关闭dim
+TopSheetDialog dialog = new TopSheetDialog(this);
+dialog.setContentView(R.layout.x);
+// 是否拦截触摸事件
+dialog.setConsumeTouch(false);
+// 在控件外触摸不隐藏
+dialog.setCanceledOnTouchOutside(false);
+// 可隐藏
+dialog.setCancelable(true);
+dialog.show();
+```
