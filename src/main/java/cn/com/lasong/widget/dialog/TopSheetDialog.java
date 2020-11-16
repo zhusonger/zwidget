@@ -72,6 +72,35 @@ public class TopSheetDialog extends AppCompatDialog {
     @Override
     public void setContentView(@LayoutRes int layoutResId) {
         super.setContentView(wrapInTopSheet(layoutResId, null, null));
+        onContentViewCreated(container);
+    }
+
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(wrapInTopSheet(0, view, null));
+        onContentViewCreated(container);
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        super.setContentView(wrapInTopSheet(0, view, params));
+        onContentViewCreated(container);
+    }
+
+    /**
+     * view设置完成之后
+     * @param parent
+     */
+    protected void onContentViewCreated(View parent) {
+
+    }
+
+    /**
+     * 获取容器布局
+     * @return
+     */
+    protected final FrameLayout getContainer() {
+        return container;
     }
 
     @Override
@@ -117,24 +146,6 @@ public class TopSheetDialog extends AppCompatDialog {
             return ((ContextWrapper) context).getBaseContext();
         }
         return context;
-    }
-
-    /**
-     * 获取容器布局
-     * @return
-     */
-    protected final FrameLayout getContainer() {
-        return container;
-    }
-
-    @Override
-    public void setContentView(View view) {
-        super.setContentView(wrapInTopSheet(0, view, null));
-    }
-
-    @Override
-    public void setContentView(View view, ViewGroup.LayoutParams params) {
-        super.setContentView(wrapInTopSheet(0, view, params));
     }
 
     @Override
