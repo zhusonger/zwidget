@@ -121,6 +121,19 @@ allInjects {
                                                     }"""
                                     ]
                             ]
+                    ],
+                    [
+                            className     : 'com.hitomi.tilibrary.loader.ImageProcessor$ImageTask',
+                            // 修改方法
+                            injectList : [
+                                    [
+                                        name   : "run",
+                                        params : "()",
+                                        catchType : "java.lang.Exception",
+                                        catchContent : "return;"
+                                    ]
+                            ]
+
                     ]
             ]
         }
