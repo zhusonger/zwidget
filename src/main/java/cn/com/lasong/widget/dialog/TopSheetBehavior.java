@@ -233,16 +233,16 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
             this.elevation = a.getDimension(R.styleable.TopSheetBehavior_Layout_android_elevation, -1);
         }
 
-        TypedValue value = a.peekValue(R.styleable.TopSheetBehavior_Layout_behavior_peekHeight);
+        TypedValue value = a.peekValue(R.styleable.TopSheetBehavior_Layout_top_behavior_peekHeight);
         if (value != null && value.data == PEEK_HEIGHT_AUTO) {
             setPeekHeight(value.data);
         } else {
             setPeekHeight(
                     a.getDimensionPixelSize(
-                            R.styleable.TopSheetBehavior_Layout_behavior_peekHeight, PEEK_HEIGHT_AUTO));
+                            R.styleable.TopSheetBehavior_Layout_top_behavior_peekHeight, PEEK_HEIGHT_AUTO));
         }
-        setHideable(a.getBoolean(R.styleable.TopSheetBehavior_Layout_behavior_hideable, false));
-        setSaveFlags(a.getInt(R.styleable.TopSheetBehavior_Layout_behavior_saveFlags, SAVE_NONE));
+        setHideable(a.getBoolean(R.styleable.TopSheetBehavior_Layout_top_behavior_hideable, false));
+        setSaveFlags(a.getInt(R.styleable.TopSheetBehavior_Layout_top_behavior_saveFlags, SAVE_NONE));
         a.recycle();
         ViewConfiguration configuration = ViewConfiguration.get(context);
         maximumVelocity = configuration.getScaledMaximumFlingVelocity();
