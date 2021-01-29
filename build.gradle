@@ -48,7 +48,7 @@ publish {
     bintrayUser = rootProject.ext.bintrayUser
     bintrayKey = rootProject.ext.bintrayKey
     dryRun false
-    override false
+    override true
     artifactId = 'widget'
     publishVersion = '0.0.5'
     desc = 'AndroidZ Widget'
