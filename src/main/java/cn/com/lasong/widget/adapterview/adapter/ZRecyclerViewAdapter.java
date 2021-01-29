@@ -33,6 +33,11 @@ public abstract class ZRecyclerViewAdapter<T> extends RecyclerView.Adapter<ZRecy
     private OnItemClickListener clickListener;
     private OnItemLongClickListener longClickListener;
 
+    public ZRecyclerViewAdapter(List<T> data, @LayoutRes int itemLayoutId) {
+        this.data = data;
+        this.itemLayoutId = itemLayoutId;
+    }
+
     public ZRecyclerViewAdapter(List<T> data, @LayoutRes int itemLayoutId, OnItemClickListener clickListener) {
         this.data = data;
         this.itemLayoutId = itemLayoutId;

@@ -218,14 +218,14 @@ public class LmRecyclerView extends RecyclerView {
 
     public <T extends RecyclerView.Adapter> void setLmAdapter(T adapter) {
         if (null != mAdapter) {
-            RecyclerView.Adapter wrapAdapter = mAdapter.getWrappedAdapter();
+            RecyclerView.Adapter<?> wrapAdapter = mAdapter.getWrappedAdapter();
             if (null != wrapAdapter) {
                 wrapAdapter.unregisterAdapterDataObserver(mDataObserver);
             }
             mAdapter.onDetachedFromRecyclerView(this);
         }
         if (null != adapter) {
-            mAdapter = new Bookends<T>(adapter);
+            mAdapter = new Bookends<>(adapter);
             adapter.registerAdapterDataObserver(mDataObserver);
             super.setAdapter(mAdapter);
         }
