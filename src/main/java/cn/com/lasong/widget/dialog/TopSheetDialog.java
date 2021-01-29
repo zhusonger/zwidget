@@ -127,7 +127,6 @@ public class TopSheetDialog extends AppCompatDialog {
             if (!ret && getRealContext() instanceof Activity) {
                 Activity activity = (Activity) getRealContext();
                 MotionEvent e = MotionEvent.obtain(event);
-                e.offsetLocation(0, ViewHelper.getStatusBarHeight(getContext()));
                 activity.dispatchTouchEvent(e);
                 e.recycle();
             }

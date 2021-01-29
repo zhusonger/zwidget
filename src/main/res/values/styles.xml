@@ -4,8 +4,8 @@
     <style name="Theme.Design.Light.TopSheetDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/Animation.Design.TopSheetDialog</item>
-        <item name="behavior_peekHeight">auto</item>
-        <item name="behavior_hideable">true</item>
+        <item name="top_behavior_peekHeight">auto</item>
+        <item name="top_behavior_hideable">true</item>
         <item name="android:elevation" ns2:ignore="NewApi">
             @dimen/design_top_sheet_modal_elevation
         </item>
