@@ -78,4 +78,13 @@
         android:text="顶部可拖动弹窗"
         android:onClick="onClick"
         />
+
+
+    <Button
+        android:id="@+id/btn_new_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳转新页面"
+        android:layout_marginTop="20dp"
+        />
 </LinearLayout>

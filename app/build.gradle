@@ -45,11 +45,11 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
-    implementation 'cn.com.lasong:base:0.0.2'
-    implementation 'cn.com.lasong:widget:0.0.5'
+//    implementation 'cn.com.lasong:base:0.0.2'
+//    implementation 'cn.com.lasong:widget:0.0.5.1'
     implementation 'cn.com.lasong:media:0.0.5'
-//    implementation project(":base")
-//    implementation project(":widget")
+    implementation project(":base")
+    implementation project(":widget")
 //    implementation project(":media")
 
     // 单独添加核心 module Transferee, 之后至少还需要添加以下三种图片加载器中的一种
