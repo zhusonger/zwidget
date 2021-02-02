@@ -18,17 +18,22 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import cn.com.lasong.R;
 import cn.com.lasong.base.BaseActivity;
+import cn.com.lasong.base.result.PERCallback;
 import cn.com.lasong.utils.FileUtils;
 import cn.com.lasong.utils.ILog;
 import cn.com.lasong.utils.TN;
@@ -61,6 +66,7 @@ public class SmsActivity extends BaseActivity implements View.OnClickListener, I
     private Queue<String> mPhoneQueue = new LinkedBlockingQueue<>();
 
     public final int REQUEST_CODE_DOC = 111;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,10 +181,10 @@ public class SmsActivity extends BaseActivity implements View.OnClickListener, I
 
     @Override
     public void onClick(View v) {
-        if (!requestAllPermissions(Manifest.permission.SEND_SMS, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            return;
-        }
-        if (v == mBtnSend) {
+        requestPermissions((isGrant, result) -> {
+            if (!isGrant || v != mBtnSend) {
+                return;
+            }
             if (mCbLoad.isChecked()) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("*/*").addCategory(Intent.CATEGORY_OPENABLE);
@@ -186,7 +192,7 @@ public class SmsActivity extends BaseActivity implements View.OnClickListener, I
                 try {
                     startActivityForResult(Intent.createChooser(intent, "Choose File"), REQUEST_CODE_DOC);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, "亲，木有文件管理器啊-_-!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SmsActivity.this, "亲，木有文件管理器啊-_-!!", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
@@ -212,7 +218,7 @@ public class SmsActivity extends BaseActivity implements View.OnClickListener, I
                 sendNum++;
             }
             mBtnSend.setEnabled(true);
-        }
+        }, Manifest.permission.SEND_SMS, Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
     @Override
