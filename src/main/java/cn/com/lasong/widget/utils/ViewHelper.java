@@ -180,7 +180,6 @@ public class ViewHelper {
 
     /**
      * 设置activity为状态栏透明
-     * @param activity
      */
     public static void transparentStatusBar(@NonNull Activity activity) {
         //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
@@ -192,5 +191,36 @@ public class ViewHelper {
         window.setStatusBarColor(Color.TRANSPARENT);
         //导航栏颜色也可以正常设置
         // window.setNavigationBarColor(Color.TRANSPARENT);
+    }
+
+
+    /**
+     * 设置状态栏间距
+     * @param view
+     */
+    public static void fitStatusBar(View view) {
+        fitStatusBar(view, 0, true);
+    }
+    public static void fitStatusBar(View view, boolean padding) {
+        fitStatusBar(view, 0, padding);
+    }
+    public static void fitStatusBar(View view, int offset) {
+        fitStatusBar(view, offset, true);
+    }
+    public static void fitStatusBar(View view, int offset, boolean padding) {
+        if (null == view) {
+            return;
+        }
+        if (padding) {
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(view.getContext()) + offset,
+                    view.getPaddingRight(), view.getPaddingBottom());
+        } else {
+            ViewParent parent = view.getParent();
+            if (parent instanceof ViewGroup && view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                lp.topMargin += (getStatusBarHeight(view.getContext()) + offset);
+                view.setLayoutParams(lp);
+            }
+        }
     }
 }

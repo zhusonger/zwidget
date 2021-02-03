@@ -102,7 +102,7 @@ implementation 'cn.com.lasong:widget:latest.release'
     // 可使用自定义theme关闭dim
     TopSheetDialog dialog = new TopSheetDialog(this);
     dialog.setContentView(R.layout.x);
-    // 是否拦截触摸事件
+    // 是否拦截触摸事件, 不拦截发现触摸偏移的话, 检查使用的主题刘海屏是否是shortEdges/never
     dialog.setConsumeTouch(false);
     // 在控件外触摸不隐藏
     dialog.setCanceledOnTouchOutside(false);
