@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import cn.com.lasong.R;
-import cn.com.lasong.base.BaseActivity;
+import cn.com.lasong.app.AppBaseActivity;
 import cn.com.lasong.media.AVChannelLayout;
 import cn.com.lasong.media.AVSampleFormat;
 import cn.com.lasong.media.Resample;
 
-public class ResampleActivity extends BaseActivity implements View.OnClickListener {
+public class ResampleActivity extends AppBaseActivity implements View.OnClickListener {
 
     private boolean mIsRunning = false;
 

@@ -13,7 +13,7 @@ import com.hitomi.tilibrary.transfer.Transferee;
 import com.vansz.glideimageloader.GlideImageLoader;
 
 import cn.com.lasong.R;
-import cn.com.lasong.base.BaseActivity;
+import cn.com.lasong.app.AppBaseActivity;
 
 /**
  * Author: zhusong
@@ -21,7 +21,7 @@ import cn.com.lasong.base.BaseActivity;
  * Date: 2020/8/13
  * Description:
  */
-public class GalleryActivity extends BaseActivity implements View.OnClickListener {
+public class GalleryActivity extends AppBaseActivity implements View.OnClickListener {
 
     private ImageView mIvIcon;
     private Transferee transfer;

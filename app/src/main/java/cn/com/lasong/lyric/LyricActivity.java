@@ -13,7 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.com.lasong.R;
-import cn.com.lasong.base.BaseActivity;
+import cn.com.lasong.app.AppBaseActivity;
 import cn.com.lasong.media.MP3DecodeThread;
 import cn.com.lasong.media.MP3Player;
 import cn.com.lasong.utils.FormatUtils;
@@ -29,7 +29,7 @@ import cn.com.lasong.widget.lyric.LyricUtils;
  * Date: 2020-03-04
  * Description: 歌词展示页面
  */
-public class LyricActivity extends BaseActivity implements View.OnClickListener, ITimeProvider, Runnable {
+public class LyricActivity extends AppBaseActivity implements View.OnClickListener, ITimeProvider, Runnable {
 
     private ImageButton mBtnPlay;
     private TextView mTvSong;

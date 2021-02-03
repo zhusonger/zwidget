@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import cn.com.lasong.base.BaseActivity;
+import cn.com.lasong.app.AppBaseActivity;
 import cn.com.lasong.utils.ILog;
 import cn.com.lasong.utils.TN;
 
@@ -18,7 +18,7 @@ import cn.com.lasong.utils.TN;
  * Date: 2020-03-04
  * Description:
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppBaseActivity {
 
     private RecyclerView mRvMain;
     private MainAdapter mAdapter;

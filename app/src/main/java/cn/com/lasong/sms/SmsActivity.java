@@ -18,22 +18,17 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import cn.com.lasong.R;
-import cn.com.lasong.base.BaseActivity;
-import cn.com.lasong.base.result.PERCallback;
+import cn.com.lasong.app.AppBaseActivity;
 import cn.com.lasong.utils.FileUtils;
 import cn.com.lasong.utils.ILog;
 import cn.com.lasong.utils.TN;
@@ -44,7 +39,7 @@ import cn.com.lasong.utils.TN;
  * Date: 2020/7/28
  * Description: 短信群发
  */
-public class SmsActivity extends BaseActivity implements View.OnClickListener, ISmsListener {
+public class SmsActivity extends AppBaseActivity implements View.OnClickListener, ISmsListener {
 
     private EditText mEdtContent;
     private Button mBtnSend;
