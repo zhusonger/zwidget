@@ -1,9 +1,12 @@
 package cn.com.lasong.widget.touch;
 
 import android.content.Context;
-import android.graphics.PointF;
+import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
@@ -23,9 +26,125 @@ public class MoveView extends RelativeLayout {
         this(context, attrs, 0);
     }
 
+    // 获取触摸阈值判断是否滑动
+    protected int mTouchSlop;
+    // 获取移动控件容器大小
+    protected Rect mContainerRect = new Rect();
+    // 获取移动控件容器padding边距
+    protected Rect mContainerPadding = new Rect();
+    protected boolean mAttachWindow = false;
+    // 是否自动靠边
+    protected boolean mAutoSide = true;
+
+    // 触摸事件的记录坐标
+    protected float mTouchLastX;
+    protected float mTouchLastY;
+
+    protected float mTouchDownX;
+    protected float mTouchDownY;
+
     public MoveView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateContainer();
+        autoSide();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mAttachWindow = true;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mAttachWindow = false;
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        boolean isFirst = mContainerRect.isEmpty();
+        if (isFirst) {
+            updateContainerAndSide();
+        } else {
+            updateContainer();
+        }
+    }
+
+    /**
+     * 更新当前位置, 继承后可以重写更新位置的方式
+     * @param deltaX 偏移量X
+     * @param deltaY 偏移量Y
+     */
+    protected void updateLayout(float deltaX, float deltaY) {
+        setX(getX() + deltaX);
+        setY(getY() + deltaY);
+    }
+
+    /**
+     * 更新容器范围, 继承后可重写容器的范围计算
+     */
+    protected void updateContainer() {
+        ViewGroup parent = (ViewGroup) getParent();
+        if (null == parent) {
+            return;
+        }
+        // 会计算进margin, 但是不包括padding
+        parent.getHitRect(mContainerRect);
+        mContainerPadding.set(parent.getPaddingLeft(), parent.getPaddingTop(),
+                parent.getPaddingRight(), parent.getPaddingBottom());
+    }
+
+    /**
+     * 自动靠边, 继承后重写靠边逻辑
+     */
+    protected void autoSide() {
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        final float currentX = getX();
+        final float currentY = getY();
+        float newX = currentX;
+        float newY = currentY;
+        // 使用width()和height()是因为这个rect是包含了margin的,
+        // 设置x和y是相对于父控件的, 所以不能用right/bottom来表示最大宽和高
+        // 最大的x/y就是最大宽/高 减去 内边距
+        final int maxX = mContainerRect.width() - mContainerPadding.right;
+        // 最小的x/y就是内边距
+        final int minX = mContainerPadding.left;
+        if (currentX + width > maxX) {
+            newX = maxX - width;
+        } else if (newX < minX) {
+            newX = minX;
+        }
+
+        final int maxY = mContainerRect.height() - mContainerPadding.bottom;
+        final int minY = mContainerPadding.top;
+        if (newY + height > maxY) {
+            newY = maxY - height;
+        } else if (newY < minY) {
+            newY = minY;
+        }
+
+        float deltaX = newX - currentX;
+        float deltaY = newY - currentY;
+        updateLayout(deltaX, deltaY);
+    }
+
+    /**
+     * 更新容器范围并自动靠边
+     */
+    protected void updateContainerAndSide() {
+        updateContainer();
+        autoSide();
+    }
+
 
     // Step1
     // 返回true拦截事件, 不往下传递
@@ -37,38 +156,63 @@ public class MoveView extends RelativeLayout {
 
     // Step2
     // 本控件内处理, 按照控件正常拦截机制拦截
+    // 1. 返回true, 直接进入onTouchEvent
+    // 2. 返回False会向下(子控件)传递
+    //   2.1 如果没有子控件处理, 就由当前onTouchEvent处理
+    //       2.1.1 如果当前控件onTouchEvent处理, 后续事件由当前控件处理
+    //       2.1.1 如果当前控件onTouchEvent没有处理, 返回上一级(父控件)继续处理
+    //   2.2 有子控件拦截事件, 子控件会消费后续的(MOVE&UP等)事件
+
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean ret = super.onInterceptTouchEvent(ev);
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        boolean ret = super.onInterceptTouchEvent(event);
+        float x = event.getRawX();
+        float y = event.getRawY();
+        // 最新的位置需要更新
+        mTouchLastX = x;
+        mTouchLastY = y;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN : {
+                mTouchDownX = x;
+                mTouchDownY = y;
+                break;
+            }
+            case MotionEvent.ACTION_MOVE : {
+                float deltaX = x - mTouchDownX;
+                float deltaY = y - mTouchDownY;
+                // move action we get it, onTouchEvent
+                // 这里就是一直都没有子控件处理触摸, 如果认定为移动阈值, 就本移动控件拦截
+                // 进入onTouchEvent进行处理
+                if (Math.abs(deltaX) >= mTouchSlop || Math.abs(deltaY) >= mTouchSlop) {
+                    ret = true;
+                }
+                break;
+            }
+        }
         return ret;
     }
 
     // 记录最新的位置
-    private PointF mLastP = new PointF();
     // Step3 当前View拦截到事件就进行触摸拖动
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean ret = super.onTouchEvent(event);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                mLastP.x = event.getRawX();
-                mLastP.y = event.getRawY();
-                break;
-            }
-
-            case MotionEvent.ACTION_MOVE: {
-                float currentX = event.getRawX();
-                float currentY = event.getRawY();
-                float offsetX = currentX - mLastP.x;
-                float offsetY = currentY - mLastP.y;
-                setX(getX() + offsetX);
-                setY(getY() + offsetY);
-                // 更新最后的位置坐标
-                mLastP.x = currentX;
-                mLastP.y = currentY;
-                break;
-            }
+        float x = event.getRawX();
+        float y = event.getRawY();
+        final int action = event.getAction();
+        // 进入当前移动控件的onTouchEvent, 表示需要移动, 处理移动事件
+        if (action == MotionEvent.ACTION_MOVE){
+            // 计算偏移量
+            float deltaX = x - mTouchLastX;
+            float deltaY = y - mTouchLastY;
+            // 更新最后的位置坐标
+            updateLayout(deltaX, deltaY);
+        }  else if (mAutoSide &&
+                (action == MotionEvent.ACTION_CANCEL
+                        | action == MotionEvent.ACTION_UP)) {
+            autoSide();
         }
-        return true;
+        mTouchLastX = x;
+        mTouchLastY = y;
+        return super.onTouchEvent(event);
     }
 }
