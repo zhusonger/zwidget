@@ -1,15 +1,24 @@
 package cn.com.lasong.widget.touch;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Author: zhusong
@@ -26,6 +35,16 @@ public class MoveView extends RelativeLayout {
         this(context, attrs, 0);
     }
 
+    public static final int SIDE_NONE = 0;
+    public static final int SIDE_BORDER = 1;
+    public static final int SIDE_CENTER_X = 3;
+
+    @IntDef({SIDE_NONE, SIDE_BORDER, SIDE_CENTER_X})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SIDE {}
+
+    // 靠边策略
+    private int mSide = SIDE_CENTER_X;
     // 获取触摸阈值判断是否滑动
     protected int mTouchSlop;
     // 获取移动控件容器大小
@@ -33,8 +52,6 @@ public class MoveView extends RelativeLayout {
     // 获取移动控件容器padding边距
     protected Rect mContainerPadding = new Rect();
     protected boolean mAttachWindow = false;
-    // 是否自动靠边
-    protected boolean mAutoSide = true;
 
     // 触摸事件的记录坐标
     protected float mTouchLastX;
@@ -79,6 +96,15 @@ public class MoveView extends RelativeLayout {
     }
 
     /**
+     * 更新吸边策略
+     * @param side
+     */
+    public void updateSide(@SIDE int side) {
+        mSide = side;
+        updateContainerAndSide();
+    }
+
+    /**
      * 更新当前位置, 继承后可以重写更新位置的方式
      * @param deltaX 偏移量X
      * @param deltaY 偏移量Y
@@ -106,6 +132,11 @@ public class MoveView extends RelativeLayout {
      * 自动靠边, 继承后重写靠边逻辑
      */
     protected void autoSide() {
+        // 无靠边忽略
+        if (mSide == SIDE_NONE || mContainerRect.isEmpty()) {
+            return;
+        }
+
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
         final float currentX = getX();
@@ -118,14 +149,25 @@ public class MoveView extends RelativeLayout {
         final int maxX = mContainerRect.width() - mContainerPadding.right;
         // 最小的x/y就是内边距
         final int minX = mContainerPadding.left;
-        if (currentX + width > maxX) {
-            newX = maxX - width;
-        } else if (newX < minX) {
-            newX = minX;
-        }
 
         final int maxY = mContainerRect.height() - mContainerPadding.bottom;
         final int minY = mContainerPadding.top;
+
+        final int centerX = maxX / 2 - width/2;
+        if (mSide == SIDE_BORDER) {
+            if (currentX + width > maxX) {
+                newX = maxX - width;
+            } else if (newX < minX) {
+                newX = minX;
+            }
+        } else if (mSide == SIDE_CENTER_X) {
+            if (currentX > centerX) {
+                newX = maxX - width;
+            } else if (newX <= centerX) {
+                newX = minX;
+            }
+        }
+
         if (newY + height > maxY) {
             newY = maxY - height;
         } else if (newY < minY) {
@@ -135,6 +177,62 @@ public class MoveView extends RelativeLayout {
         float deltaX = newX - currentX;
         float deltaY = newY - currentY;
         updateLayout(deltaX, deltaY);
+    }
+
+    /**
+     * 显示
+     */
+    public void show(Activity activity) {
+        ViewParent parent = getParent();
+        if (parent instanceof ViewGroup) {
+            Context context = getContext();
+            // 如果不是一个activity, 移除
+            if (context instanceof Activity && activity != context) {
+                remove();
+            }
+            // 同一个activity直接显示
+            else {
+                show();
+                return;
+            }
+        }
+
+        if (activity == null) {
+            return;
+        }
+
+        Window window = activity.getWindow();
+        View decorView = window.getDecorView();
+        FrameLayout contentView = decorView.findViewById(android.R.id.content);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        contentView.addView(this, params);
+    }
+
+    /**
+     * 隐藏
+     * 可以重写自己实现效果
+     */
+    public void hide() {
+        setVisibility(View.GONE);
+    }
+
+    /**
+     * 显示
+     * 可以重写自己实现效果
+     */
+    protected void show() {
+        setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 移除
+     */
+    public void remove() {
+        ViewParent parent = getParent();
+        if (parent instanceof ViewGroup) {
+            ((ViewGroup) parent).removeView(this);
+        }
     }
 
     /**
@@ -206,9 +304,8 @@ public class MoveView extends RelativeLayout {
             float deltaY = y - mTouchLastY;
             // 更新最后的位置坐标
             updateLayout(deltaX, deltaY);
-        }  else if (mAutoSide &&
-                (action == MotionEvent.ACTION_CANCEL
-                        | action == MotionEvent.ACTION_UP)) {
+        }  else if (action == MotionEvent.ACTION_CANCEL
+                        | action == MotionEvent.ACTION_UP) {
             autoSide();
         }
         mTouchLastX = x;
