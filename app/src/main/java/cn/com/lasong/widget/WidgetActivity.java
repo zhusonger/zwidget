@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import cn.com.lasong.R;
 import cn.com.lasong.app.AppBaseActivity;
+import cn.com.lasong.databinding.ActivityWidgetBinding;
 import cn.com.lasong.widget.dialog.TopSheetDialog;
 
 /**
@@ -17,10 +18,12 @@ import cn.com.lasong.widget.dialog.TopSheetDialog;
  */
 public class WidgetActivity extends AppBaseActivity {
 
+    private ActivityWidgetBinding binding;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_widget);
+        binding = ActivityWidgetBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
     }
 
     @Override
@@ -33,8 +36,8 @@ public class WidgetActivity extends AppBaseActivity {
         return FitStatusBarType.MARGIN;
     }
 
-    TopSheetDialog dialog;
-
+    private TopSheetDialog dialog;
+    private IconMoveView moveView;
     public void onClick(View view) {
         int id = view.getId();
         switch (id) {
@@ -50,6 +53,23 @@ public class WidgetActivity extends AppBaseActivity {
                 // 在控件外触摸不隐藏
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
+                break;
+            }
+
+            case R.id.btn_move: {
+                if (null != moveView) {
+                    if (moveView.getVisibility() == View.VISIBLE) {
+                        moveView.hide();
+                        binding.btnMove.setText("显示浮窗");
+                    } else {
+                        moveView.show(this);
+                        binding.btnMove.setText("隐藏浮窗");
+                    }
+                } else {
+                    moveView = new IconMoveView(this);
+                    moveView.show(this);
+                    binding.btnMove.setText("隐藏浮窗");
+                }
                 break;
             }
         }
