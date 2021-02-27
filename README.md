@@ -186,3 +186,8 @@ implementation 'cn.com.lasong:widget:latest.release'
     // 关闭加载更多功能
     lmRecyclerView.disableLoadMore();
     ```
+
+    ### 0.0.5.2
+    * 优化移动控件
+    * 处理全屏状态栏的间距
+    * 添加富文本控件
