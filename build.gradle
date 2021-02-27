@@ -31,17 +31,19 @@ allprojects {
 //        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 //        maven { url "https://dl.bintray.com/zhusong/maven" }
     }
+
+    //最好加上全局编码设置
+    tasks.withType(Javadoc) {
+        options {
+            encoding "UTF-8"
+            charSet 'UTF-8'
+            links "http://docs.oracle.com/javase/8/docs/api"
+            failOnError false
+        }
+    }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-//最好加上全局编码设置
-tasks.withType(Javadoc) {
-    options {
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        links "http://docs.oracle.com/javase/7/docs/api"
-    }
-}
