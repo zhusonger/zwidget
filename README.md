@@ -191,3 +191,6 @@ implementation 'cn.com.lasong:widget:latest.release'
     * 优化移动控件
     * 处理全屏状态栏的间距
     * 添加富文本控件
+
+    ### 0.0.5.3
+    * 添加ZTabLayout, 支持结合viewpager使用自定义布局
