@@ -194,3 +194,6 @@ implementation 'cn.com.lasong:widget:latest.release'
 
     ### 0.0.5.3
     * 添加ZTabLayout, 支持结合viewpager使用自定义布局
+
+    ### 0.0.5.4
+        * AdapterAlertDialog支持x, y偏移

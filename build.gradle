@@ -51,7 +51,7 @@ publish {
     dryRun false
     override true
     artifactId = 'widget'
-    publishVersion = '0.0.5.3'
+    publishVersion = '0.0.5.4'
     desc = 'AndroidZ Widget'
     website = "https://github.com/zhusonger/androidz_widget"
 }

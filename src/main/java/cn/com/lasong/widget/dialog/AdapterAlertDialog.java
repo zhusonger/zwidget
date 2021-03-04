@@ -75,6 +75,12 @@ public abstract class AdapterAlertDialog extends AlertDialog {
                         size.width() > 0 ? size.width() : ViewGroup.LayoutParams.WRAP_CONTENT,
                         size.height() > 0 ? size.height() : ViewGroup.LayoutParams.WRAP_CONTENT
                 );
+                int yOffset = size.top;
+                int xOffset = size.left;
+                WindowManager.LayoutParams params = window.getAttributes();
+                params.y = yOffset;
+                params.x = xOffset;
+                window.setAttributes(params);
             }
 
             if (showSoftInput()) {
