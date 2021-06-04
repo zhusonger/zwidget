@@ -1,15 +1,13 @@
 # Widget
 常用控件集合
 
-__因为jcenter的关停, 迁移到了jitpack, 统一到一个项目中([AndroidZ](https://github.com/zhusonger/androidz))__
-
 # 引入
 
 ```
-implementation 'cn.com.lasong:widget:latest.release'
+implementation 'com.github.zhusonger:zwidget:1.0.0'
 ```
 
-## v0.0.1  
+## 1.0.0
 
 * 添加歌词控件LrcView  
 使用TextureView实现歌词渲染, 提高渲染效率  
@@ -18,8 +16,6 @@ implementation 'cn.com.lasong:widget:latest.release'
 * 添加拖动控件MoveView
  使用相对布局实现移动布局, 可以像普通RelativeLayout一样使用, 支持移动被MoveView包含的所有内容   
  ![](https://www.lasong.com.cn/assets/img/gif/move.gif)
-
-## v0.0.2
 
 * 添加可设置图标大小的CheckedTextView&EditText
 
@@ -51,8 +47,6 @@ implementation 'cn.com.lasong:widget:latest.release'
         android:textSize="16sp"
         />
     ```
-
-## v0.0.3
 
 * 添加阴影控件, 自定义背景色与阴影色, 阴影控件与实际展示内容大小一致, 不需要预留阴影的空间
 
@@ -96,8 +90,6 @@ implementation 'cn.com.lasong:widget:latest.release'
     </cn.com.lasong.widget.shadow.ShadowLayout>
     ```
 
-## v0.0.4
-
 * 添加顶部滑入弹窗
 
     ```java
@@ -112,8 +104,6 @@ implementation 'cn.com.lasong:widget:latest.release'
     dialog.setCancelable(true);
     dialog.show();
     ```
-
-## v0.0.5
 
 * 添加AdapterAlertDialog, 简化弹窗的实现
 
@@ -189,13 +179,62 @@ implementation 'cn.com.lasong:widget:latest.release'
     lmRecyclerView.disableLoadMore();
     ```
 
-    ### 0.0.5.2
-    * 优化移动控件
-    * 处理全屏状态栏的间距
-    * 添加富文本控件
+* 优化移动控件
+* 处理全屏状态栏的间距
+* 添加富文本控件
+* 添加ZTabLayout, 支持结合viewpager使用自定义布局
+* AdapterAlertDialog支持x, y偏移
+* 处理1.3.0TabLayout长按的tooltip提醒
+* 新增阴影控件v2, 自适应内容, 并修复列表中背景不显示的问题
 
-    ### 0.0.5.3
-    * 添加ZTabLayout, 支持结合viewpager使用自定义布局
+    ```java
+    cn.com.lasong.widget.shadow.v2.ShadowLayout
+    ```
+* 修复阴影控件背景范围显示不正确的问题
+* 新增背景圆角控件
 
-    ### 0.0.5.4
-        * AdapterAlertDialog支持x, y偏移
+    ```java
+    cn.com.lasong.widget.RadiusLayout
+    ```
+* 新增RecyclerView吸顶分组实现,
+
+    ```java
+    cn.com.lasong.widget.adapterview.itemdecoration.StickyHeaderDecoration
+    cn.com.lasong.widget.adapterview.itemdecoration.StickHeaderProvider
+
+    // 使用方法
+    StickyHeaderDecoration stickyHeaderDecoration = new StickyHeaderDecoration();
+    // 重写adapter的onAttachedToRecyclerView, 进行捆绑
+    stickyHeaderDecoration.attachRecyclerView(recyclerView, <StickHeaderProvider实现>);
+    // 重写adapter的onDetachedFromRecyclerView, 进行释放
+    stickyHeaderDecoration.detachRecyclerView(recyclerView);
+
+    // StickHeaderProvider的实现是2个方法
+    // createOrUpdateHeader 主要是创建吸顶的布局
+    // isStickHeader判断位置是否是吸顶布局
+    @Override
+    public RecyclerView.ViewHolder createOrUpdateHeader(RecyclerView.ViewHolder cache, LayoutInflater inflater, RecyclerView parent, int position) {
+        if (!isStickHeader(position)) {
+            return null;
+        }
+        ViewHolder holder = cache;
+        if (null == holder) {
+            View v = inflater.inflate(R.layout.item_sticker_header, parent, false);
+            holder = new ZRecyclerViewAdapter.AdapterViewHolder(v, null, null);
+        }
+
+        adapter.bind((ZRecyclerViewAdapter.AdapterViewHolder) holder, data.get(position), position);
+        return holder;
+    }
+
+    @Override
+    public boolean isStickHeader(int position) {
+        return position % 10 == 0;
+    }
+    ```
+* 扩展RadiusLayout, 添加边线
+* 添加索引控件, 支持任意形式的控件
+
+    ```java
+    cn.com.lasong.widget.AnyIndexView
+    ```

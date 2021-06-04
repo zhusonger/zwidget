@@ -6,10 +6,12 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
@@ -222,5 +224,159 @@ public class ViewHelper {
                 view.setLayoutParams(lp);
             }
         }
+    }
+
+
+    // LT 0001
+    // RT 0010
+    // RB 0100
+    // LB 1000
+    // ALL 1111
+    public static final int BORDER_LEFT_TOP = 0b0001;
+    public static final int BORDER_RIGHT_TOP = 0b0010;
+    public static final int BORDER_RIGHT_BOTTOM = 0b0100;
+    public static final int BORDER_LEFT_BOTTOM = 0b1000;
+    public static final int BORDER_ALL = 0b1111;
+    /**
+     * 更新圆角路径
+     */
+    public static Path updateRadiusPath(Path path,
+                                         float left, float top, float right, float bottom, float rx, float ry,
+                                         int borderFlags){
+        if (null == path) {
+            path = new Path();
+        }
+        final boolean lt = (borderFlags & BORDER_LEFT_TOP) > 0;
+        final boolean rt = (borderFlags & BORDER_RIGHT_TOP) > 0;
+        final boolean rb = (borderFlags & BORDER_RIGHT_BOTTOM) > 0;
+        final boolean lb = (borderFlags & BORDER_LEFT_BOTTOM) > 0;
+        path.reset();
+        if (rx < 0) rx = 0;
+        if (ry < 0) ry = 0;
+        float width = right - left;
+        float height = bottom - top;
+        if (rx > width / 2) rx = width / 2;
+        if (ry > height / 2) ry = height / 2;
+        float widthMinusCorners = (width - (2 * rx));
+        float heightMinusCorners = (height - (2 * ry));
+
+        path.moveTo(right, top + ry);
+        if (rt)
+            path.rQuadTo(0, -ry, -rx, -ry);//top-right corner
+        else{
+            path.rLineTo(0, -ry);
+            path.rLineTo(-rx,0);
+        }
+        path.rLineTo(-widthMinusCorners, 0);
+        if (lt)
+            path.rQuadTo(-rx, 0, -rx, ry); //top-left corner
+        else{
+            path.rLineTo(-rx, 0);
+            path.rLineTo(0,ry);
+        }
+        path.rLineTo(0, heightMinusCorners);
+
+        if (lb)
+            path.rQuadTo(0, ry, rx, ry);//bottom-left corner
+        else{
+            path.rLineTo(0, ry);
+            path.rLineTo(rx,0);
+        }
+
+        path.rLineTo(widthMinusCorners, 0);
+        if (rb)
+            path.rQuadTo(rx, 0, rx, -ry); //bottom-right corner
+        else{
+            path.rLineTo(rx,0);
+            path.rLineTo(0, -ry);
+        }
+
+        path.rLineTo(0, -heightMinusCorners);
+
+        path.close();//Given close, last lineto can be removed.
+        return path;
+    }
+
+
+    /**
+     * 判断控件是否在滚动视图内
+     * @param view 需要判断的控件
+     * @return true or false
+     */
+    public static boolean isInScrollingContainer(View view) {
+        if (null == view) {
+            return false;
+        }
+        ViewParent p = view.getParent();
+        while (p instanceof ViewGroup) {
+            if (((ViewGroup) p).shouldDelayChildPressedState()) {
+                return true;
+            }
+            p = p.getParent();
+        }
+        return false;
+    }
+
+    private static int sTouchSlop;
+    /**
+     * 判断触摸的位置是否是控件内
+     * @return true or false
+     */
+    public static boolean pointInView(View view, float localX, float localY) {
+        if (null == view) {
+            return false;
+        }
+        if (sTouchSlop <= 0) {
+            sTouchSlop = ViewConfiguration.get(view.getContext()).getScaledTouchSlop();
+        }
+        final float slop = sTouchSlop;
+        return localX >= -slop && localY >= -slop && localX < ((view.getRight() - view.getLeft()) + slop) &&
+                localY < ((view.getBottom() - view.getTop()) + slop);
+    }
+
+    /**
+     * 判断view是否在父控件内的点击事件 是否在控件内
+     * @param view
+     * @param localX
+     * @param localY
+     * @return
+     */
+    public static boolean pointInViewParent(View view, float localX, float localY) {
+        if (null == view) {
+            return false;
+        }
+        if (sTouchSlop <= 0) {
+            sTouchSlop = ViewConfiguration.get(view.getContext()).getScaledTouchSlop();
+        }
+        final float slop = sTouchSlop;
+        return localX >= -slop + view.getLeft() && localY >= -slop + view.getTop()
+                && localX < (view.getRight() + slop) && localY < (view.getBottom() + slop);
+    }
+
+    /**
+     * 动态设置透明度
+     * @param alpha 透明度
+     * @param baseColor 需要修改透明度的颜色
+     * @return
+     */
+    public static int alpha(float alpha, int baseColor) {
+        int a = Math.min(255, Math.max(0, (int) (alpha * 255))) << 24;
+        int rgb = 0x00ffffff & baseColor;
+        return a + rgb;
+    }
+
+    /**
+     * 设置view的点击透明度
+     * @param alpha 按下时的透明度
+     * @param view 需要处理按下透明度的控件
+     */
+    public static void setClickAlpha(float alpha, View view) {
+        if (null != view) {
+            ClickAlphaAction action = new ClickAlphaAction(alpha);
+            view.setOnTouchListener(action);
+        }
+    }
+    public static void setClickAlpha(View view) {
+        setClickAlpha(0.5f, view);
     }
 }
