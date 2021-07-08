@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="bgColor" format="color" />
+    <attr name="bgRadius" format="dimension" />
+    <attr name="radiusFlags">
+        <flag name="lt" value="1"/>
+        <flag name="rt" value="2"/>
+        <flag name="rb" value="4"/>
+        <flag name="lb" value="8"/>
+    </attr>
+    <attr name="borderColor" format="color"/>
+    <attr name="bgCircle" format="boolean"/>
+
     <declare-styleable name="ResizeTextView">
         <attr name="drawTopWidth" format="dimension"/>
         <attr name="drawTopHeight" format="dimension"/>
@@ -10,15 +21,6 @@
         <attr name="drawBottomWidth" format="dimension"/>
         <attr name="drawBottomHeight" format="dimension"/>
     </declare-styleable>
-
-    <attr name="bgColor" format="color" />
-    <attr name="bgRadius" format="dimension" />
-    <attr name="radiusFlags">
-        <flag name="lt" value="1"/>
-        <flag name="rt" value="2"/>
-        <flag name="rb" value="4"/>
-        <flag name="lb" value="8"/>
-    </attr>
     <declare-styleable name="ShadowLayout">
         <attr name="shadowDx" format="dimension" />
         <attr name="shadowDy" format="dimension" />
@@ -66,10 +68,16 @@
     </declare-styleable>
 
     <declare-styleable name="RadiusLayout">
+        <attr name="bgCircle"/>
         <attr name="bgColor"/>
         <attr name="bgRadius"/>
         <attr name="radiusFlags"/>
         <attr name="borderWidth"/>
-        <attr name="borderColor" format="color"/>
+        <attr name="borderColor"/>
+    </declare-styleable>
+
+    <declare-styleable name="MediaButton">
+        <attr name="iconColor" format="color"/>
+        <attr name="android:duration"/>
     </declare-styleable>
 </resources>
