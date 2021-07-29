@@ -1,12 +1,9 @@
 package cn.com.lasong.widget.utils;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import androidx.annotation.FloatRange;
 
@@ -51,7 +48,6 @@ public class ClickAlphaAction implements View.OnTouchListener{
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        Log.e("Test", "action : " + event.getAction());
         final boolean clickable = view.isClickable() || view.isLongClickable();
         if (clickable) {
             final float x = event.getX();
@@ -153,7 +149,5 @@ public class ClickAlphaAction implements View.OnTouchListener{
                 view.setAlpha(defaultAlpha);
             }
         }
-
-        Log.e("Test", "setPressed : " + pressed);
     }
 }
