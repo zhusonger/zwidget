@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import cn.com.lasong.widget.utils.ViewHelper;
+
 
 /**
  * Author: zhusong
@@ -180,6 +182,18 @@ public abstract class ZRecyclerViewAdapter<T> extends RecyclerView.Adapter<ZRecy
             for (int i : ids) {
                 View v = getView(i);
                 v.setOnClickListener(this);
+            }
+            return this;
+        }
+
+        /**
+         * 设置点击透明度变化
+         * @return
+         */
+        public AdapterViewHolder setAlphaClick(int... ids) {
+            for (int i : ids) {
+                View v = getView(i);
+                ViewHelper.setClickAlpha(v);
             }
             return this;
         }

@@ -177,6 +177,24 @@ public class Bookends<T extends RecyclerView.Adapter<RecyclerView.ViewHolder>> e
 	}
 
 	@Override
+	public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+		if (payloads.isEmpty()) {
+			super.onBindViewHolder(holder, position, payloads);
+			return;
+		}
+		if (position < mHeaders.size()) {
+			// Headers don't need anything special
+
+		} else if (position < mHeaders.size() + mBase.getItemCount()) {
+			// This is a real position, not a header or footer. Bind it.
+			mBase.onBindViewHolder(holder, position - mHeaders.size(), payloads);
+		} else {
+			// Footers don't need anything special
+		}
+
+	}
+
+	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 		if (position < mHeaders.size()) {
 			// Headers don't need anything special
