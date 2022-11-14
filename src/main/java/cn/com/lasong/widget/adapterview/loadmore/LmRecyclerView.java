@@ -14,7 +14,7 @@ import cn.com.lasong.widget.adapterview.adapter.Bookends;
  * Created by zhusong on 17/5/9.
  * load more recycler view
  */
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
 public class LmRecyclerView extends RecyclerView {
 
     private final String TAG = "LmRecyclerView";

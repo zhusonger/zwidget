@@ -90,7 +90,7 @@ public abstract class ZRecyclerViewAdapter<T> extends RecyclerView.Adapter<ZRecy
 
         private SparseArray<TextView> mGifViews;
 
-        @SuppressWarnings("unused")
+//        @SuppressWarnings("unused")
         public AdapterViewHolder(@NonNull View itemView) {
             this(itemView, null, null);
         }
