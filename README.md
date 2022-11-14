@@ -11,11 +11,11 @@ implementation 'com.github.zhusonger:zwidget:1.0.0'
 
 * 添加歌词控件LrcView  
 使用TextureView实现歌词渲染, 提高渲染效率  
-![](https://www.lasong.com.cn/assets/img/gif/lyric.gif)
+![](https://raw.githubusercontent.com/zhusonger/zwidget/master/assets/lyric.gif)
 
 * 添加拖动控件MoveView
  使用相对布局实现移动布局, 可以像普通RelativeLayout一样使用, 支持移动被MoveView包含的所有内容   
- ![](https://www.lasong.com.cn/assets/img/gif/move.gif)
+ ![](https://raw.githubusercontent.com/zhusonger/zwidget/master/assets/move.gif)
 
 * 添加可设置图标大小的CheckedTextView&EditText
 
